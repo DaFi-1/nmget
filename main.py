@@ -292,3 +292,17 @@ def delete_current_tag():
         Tag.delete(db, tag.name)
     return jsonify({"tag": EMPTY_TAG})
 
+
+@app.route('/nmget', methods=['GET', 'POST'])
+def nmget():
+    if request.method == "POST":
+        data = request.get_json(silent=True)
+        tag_name = ((data or {}).get("tag") or "").strip()[:MAX_TAG_LENGTH]
+        if tag_name:
+            try:
+                Tag.create(db, name=tag_name)
+            except sqlite3.IntegrityError:
+                pass
+        return jsonify({"ok": True})
+    return render_template('nmget.html')
+
