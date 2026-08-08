@@ -84,3 +84,38 @@ class Database:
             if "send" in columns and "status" not in columns:
                 connection.execute("ALTER TABLE numbers RENAME COLUMN send TO status")
 
+
+class Model:
+    table = None
+    columns = ()
+
+    def __init__(self, db, **values):
+        self.db = db
+        for column in self.columns:
+            setattr(self, column, values.get(column))
+
+    @classmethod
+    def find(cls, db, **filters):
+        clauses = " AND ".join(f"{key} = ?" for key in filters)
+        values = list(filters.values())
+        with db._connect() as connection:
+            rows = connection.execute(
+                f"SELECT * FROM {cls.table} WHERE {clauses}", values
+            ).fetchall()
+        return [cls(db, **dict(row)) for row in rows]
+
+    def save(self):
+        columns = [
+            column
+            for column in self.columns
+            if column != "id" and getattr(self, column) is not None
+        ]
+        placeholders = ",".join("?" for _ in columns)
+        values = [getattr(self, column) for column in columns]
+        with self.db._connect() as connection:
+            connection.execute(
+                f"INSERT INTO {self.table} ({','.join(columns)}) "
+                f"VALUES ({placeholders})",
+                values,
+            )
+
