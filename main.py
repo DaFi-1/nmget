@@ -253,3 +253,13 @@ class Queue(Model):
     def clear_tag(cls, db, tag):
         cls._clear(db, filter_=TAG_FILTER, values=(tag,))
 
+
+db = Database()
+
+
+@app.before_request
+def ensure_db():
+    if request.path.startswith("/static/"):
+        return
+    db._initialize()
+
