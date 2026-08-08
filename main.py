@@ -189,3 +189,67 @@ class Number(Model):
             "status_by_tag": [dict(row) for row in status_by_tag],
         }
 
+
+class Queue(Model):
+    table = "queue"
+    columns = ("id", "number", "tag")
+
+    @classmethod
+    def stats(cls, db):
+        with db._connect() as connection:
+            rows = connection.execute(
+                "SELECT tag AS tag, COUNT(id) AS quantity "
+                "FROM queue GROUP BY tag ORDER BY quantity DESC"
+            ).fetchall()
+        return [dict(row) for row in rows]
+
+    @classmethod
+    def add_numbers(cls, db, tag, numbers):
+        with db._connect() as connection:
+            for number in numbers:
+                connection.execute(
+                    "INSERT OR IGNORE INTO queue (number, tag) "
+                    "SELECT ?, ? WHERE NOT EXISTS "
+                    "(SELECT 1 FROM numbers WHERE number = ?)",
+                    (number, tag, number),
+                )
+
+    @classmethod
+    def _move(cls, db, filter_="", values=()):
+        where = f" WHERE {filter_}" if filter_ else ""
+        moment = now()
+        with db._connect() as connection:
+            rows = connection.execute(
+                f"SELECT * FROM queue{where}", values
+            ).fetchall()
+            for row in rows:
+                data = dict(row)
+                connection.execute(
+                    "INSERT OR IGNORE INTO numbers (tag, number, status, send_date, date_get_number) "
+                    "VALUES (?, ?, ?, NULL, ?)",
+                    (data["tag"], data["number"], STATUS_PENDING, moment),
+                )
+            connection.execute(f"DELETE FROM queue{where}", values)
+
+    @classmethod
+    def move_to_numbers(cls, db):
+        cls._move(db)
+
+    @classmethod
+    def move_tag(cls, db, tag):
+        cls._move(db, filter_=TAG_FILTER, values=(tag,))
+
+    @classmethod
+    def _clear(cls, db, filter_="", values=()):
+        where = f" WHERE {filter_}" if filter_ else ""
+        with db._connect() as connection:
+            connection.execute(f"DELETE FROM queue{where}", values)
+
+    @classmethod
+    def clear_all(cls, db):
+        cls._clear(db)
+
+    @classmethod
+    def clear_tag(cls, db, tag):
+        cls._clear(db, filter_=TAG_FILTER, values=(tag,))
+
