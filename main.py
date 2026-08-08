@@ -278,3 +278,17 @@ def dashboard():
 def dashboard_data():
     return jsonify(Number.stats(db))
 
+
+@app.route('/tag/current')
+def current_tag():
+    tag = Tag.current(db)
+    return jsonify({"tag": tag.name})
+
+
+@app.route('/tag/current', methods=['DELETE'])
+def delete_current_tag():
+    tag = Tag.current(db)
+    if tag.name != EMPTY_TAG:
+        Tag.delete(db, tag.name)
+    return jsonify({"tag": EMPTY_TAG})
+
