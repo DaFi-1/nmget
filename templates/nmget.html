@@ -504,6 +504,79 @@ tbody tr:hover {
     const btnCopy = document.getElementById("btn-copy");
     const currentTagName = document.getElementById("current-tag-name");
     const btnDeleteTag = document.getElementById("btn-delete-tag");
+    const statsBody = document.getElementById("stats-body");
+    const statsTotal = document.getElementById("stats-total");
+    const btnSendAll = document.getElementById("btn-send-all");
+    const btnDeleteAll = document.getElementById("btn-delete-all");
+
+    let prevStats = "";
+
+    const renderStats = (d) => {
+        statsBody.innerHTML = "";
+        let total = 0;
+        d.items.forEach((item, i) => {
+            total += item.quantity;
+            const tr = document.createElement("tr");
+            tr.style.animationDelay = `${i * 60}ms`;
+            tr.innerHTML =
+                `<td>${item.tag}</td>` +
+                `<td class="num" data-value="${item.quantity}">0</td>` +
+                `<td><div class="row-actions">` +
+                `<button class="btn-row btn-row-add" data-tag="${item.tag}">Add</button>` +
+                `<button class="btn-row btn-row-del" data-tag="${item.tag}">Delete</button>` +
+                `</div></td>`;
+            statsBody.appendChild(tr);
+        });
+        statsTotal.textContent = total;
+        if (d.items.length === 0) {
+            const tr = document.createElement("tr");
+            tr.innerHTML = '<td class="empty" colspan="3">Empty queue</td>';
+            statsBody.appendChild(tr);
+        }
+        document.querySelectorAll("#stats-body .num").forEach(el => {
+            const target = parseInt(el.dataset.value, 10);
+            let n = 0;
+            const step = Math.max(1, Math.ceil(target / 30));
+            const timer = setInterval(() => {
+                n += step;
+                if (n >= target) { n = target; clearInterval(timer); }
+                el.textContent = n;
+            }, 30);
+        });
+    };
+
+    const loadStats = () => {
+        fetch("/queue")
+            .then(r => r.json())
+            .then(d => {
+                const current = JSON.stringify(d.items);
+                if (current === prevStats) return;
+                prevStats = current;
+                renderStats(d);
+            });
+    };
+
+    statsBody.addEventListener("click", (e) => {
+        const button = e.target.closest(".btn-row");
+        if (!button) return;
+        const tag = button.dataset.tag;
+        const route = button.classList.contains("btn-row-add")
+            ? "/queue/send"
+            : "/queue/clear";
+        fetch(route, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ tag: tag })
+        }).then(loadStats);
+    });
+
+    btnSendAll.addEventListener("click", () => {
+        fetch("/queue/send", { method: "POST" }).then(loadStats);
+    });
+
+    btnDeleteAll.addEventListener("click", () => {
+        fetch("/queue/clear", { method: "POST" }).then(loadStats);
+    });
 
     const loadCurrentTag = () => {
         fetch("/tag/current")
@@ -588,6 +661,8 @@ tbody tr:hover {
 
     update();
     loadCurrentTag();
+    loadStats();
+    setInterval(loadStats, 2000);
 
     btnCopy.addEventListener("click", () => {
         if (btnCopy.disabled) return;
