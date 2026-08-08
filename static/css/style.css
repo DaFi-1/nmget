@@ -1,0 +1,9 @@
+@font-face {
+    font-family: "TerminessNerdFont-Bold";
+    src: url("/static/fonts/TerminessNerdFont-Bold.ttf") format("truetype");
+}
+
+@font-face {
+    font-family: "TerminessNerdFontMono-Regular";
+    src: url("/static/fonts/TerminessNerdFontMono-Regular.ttf") format("truetype");
+}
