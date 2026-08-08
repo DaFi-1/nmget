@@ -263,3 +263,13 @@ def ensure_db():
         return
     db._initialize()
 
+
+@app.route('/')
+def home():
+    return redirect(url_for('dashboard'))
+
+
+@app.route('/dashboard')
+def dashboard():
+    return render_template('dashboard.html')
+
