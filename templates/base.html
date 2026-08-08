@@ -56,6 +56,21 @@ button {background: none;border: none;cursor: pointer;}
   gap:24px;
   border-right:1px solid var(--border);
   flex-shrink:0;
+  position:relative;
+  overflow:hidden;
+}
+#container aside #matrix-rain {
+  position:absolute;
+  inset:0;
+  z-index:0;
+  opacity:0.4;
+  pointer-events:none;
+}
+#container aside .brand,
+#container aside nav,
+#container aside .brand-foot {
+  position:relative;
+  z-index:1;
 }
 #container aside .brand {
   display:flex;
@@ -137,6 +152,7 @@ button {background: none;border: none;cursor: pointer;}
   <body>
     <div id="container">
       <aside>
+        <canvas id="matrix-rain"></canvas>
         <p class="brand">nm<span>GET</span></p>
         <nav>
           <ul>
@@ -149,6 +165,58 @@ button {background: none;border: none;cursor: pointer;}
       </aside>
       <main> {% block content %} {% endblock %}</main>
     </div>
-    
+    <script>
+    (() => {
+        const canvas = document.getElementById("matrix-rain");
+        if (!canvas) return;
+        const ctx = canvas.getContext("2d");
+        const aside = canvas.parentElement;
+        const chars = "0123456789";
+        const fontSize = 14;
+        let cols = 0;
+
+        function resize() {
+            const dpr = window.devicePixelRatio || 1;
+            const w = aside.clientWidth;
+            const h = aside.clientHeight;
+            canvas.width = Math.floor(w * dpr);
+            canvas.height = Math.floor(h * dpr);
+            ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+            cols = Math.max(1, Math.floor(w / fontSize));
+        }
+
+        const drops = [];
+        function seed() {
+            drops.length = 0;
+            for (let i = 0; i < cols; i++) {
+                drops.push(Math.floor(Math.random() * -40));
+            }
+        }
+
+        function draw() {
+            ctx.fillStyle = "rgba(0, 0, 0, 0.07)";
+            ctx.fillRect(0, 0, aside.clientWidth, aside.clientHeight);
+            ctx.font = fontSize + "px TerminessNerdFontMono-Regular, ui-monospace, monospace";
+            for (let i = 0; i < cols; i++) {
+                const x = i * fontSize;
+                const y = drops[i] * fontSize;
+                ctx.fillStyle = Math.random() > 0.975 ? "#9dff9d" : "#00ff00";
+                ctx.fillText(chars[Math.floor(Math.random() * chars.length)], x, y);
+                if (y > aside.clientHeight && Math.random() > 0.975) {
+                    drops[i] = 0;
+                }
+                drops[i]++;
+            }
+        }
+
+        resize();
+        seed();
+        window.addEventListener("resize", () => { resize(); seed(); });
+        (function loop() {
+            draw();
+            requestAnimationFrame(loop);
+        })();
+    })();
+    </script>
   </body>
 </html> 
