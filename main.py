@@ -145,3 +145,47 @@ class Tag(Model):
         with db._connect() as connection:
             connection.execute(f"DELETE FROM {cls.table} WHERE name = ?", (name,))
 
+
+class Number(Model):
+    table = "numbers"
+    columns = ("id", "tag", "number", "status", "send_date", "date_get_number")
+
+    @classmethod
+    def stats(cls, db):
+        today_start = datetime.now().strftime("%Y-%m-%d") + " 00:00:00"
+        with db._connect() as connection:
+            total = connection.execute("SELECT COUNT(id) FROM numbers").fetchone()[0]
+            by_tag = connection.execute(
+                "SELECT tag, COUNT(id) AS quantity FROM numbers "
+                "GROUP BY tag ORDER BY quantity DESC"
+            ).fetchall()
+            by_date = connection.execute(
+                "SELECT substr(date_get_number, 1, 10) AS date, "
+                "COUNT(id) AS quantity FROM numbers "
+                "GROUP BY date ORDER BY date"
+            ).fetchall()
+            by_status = connection.execute(
+                "SELECT status, COUNT(id) AS quantity FROM numbers "
+                "GROUP BY status ORDER BY quantity DESC"
+            ).fetchall()
+            status_by_tag = connection.execute(
+                "SELECT tag, status, COUNT(id) AS quantity FROM numbers "
+                "GROUP BY tag, status ORDER BY tag"
+            ).fetchall()
+            today = connection.execute(
+                "SELECT COUNT(id) FROM numbers WHERE date_get_number >= ?",
+                (today_start,),
+            ).fetchone()[0]
+            last = connection.execute(
+                "SELECT MAX(date_get_number) FROM numbers"
+            ).fetchone()[0]
+        return {
+            "total": total,
+            "today": today,
+            "last_capture": last,
+            "by_tag": [dict(row) for row in by_tag],
+            "by_date": [dict(row) for row in by_date],
+            "by_status": [dict(row) for row in by_status],
+            "status_by_tag": [dict(row) for row in status_by_tag],
+        }
+
