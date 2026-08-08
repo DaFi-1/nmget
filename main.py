@@ -370,3 +370,8 @@ def receive_phones():
     Queue.add_numbers(db, tag_name, numbers)
     return jsonify({"ok": True})
 
+
+@app.route('/config')
+def config():
+    return render_template('config.html')
+
