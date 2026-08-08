@@ -496,7 +496,106 @@ tbody tr:hover {
 </div>
 
 <script>
-(() => {})();
+(() => {
+    const form = document.getElementById("form-nmget");
+    const tag = document.getElementById("tag");
+    const duration = document.getElementById("duration");
+    const scriptEl = document.getElementById("script");
+    const btnCopy = document.getElementById("btn-copy");
+    const currentTagName = document.getElementById("current-tag-name");
+    const btnDeleteTag = document.getElementById("btn-delete-tag");
+
+    const loadCurrentTag = () => {
+        fetch("/tag/current")
+            .then(r => r.json())
+            .then(d => { currentTagName.textContent = d.tag; });
+    };
+
+    btnDeleteTag.addEventListener("click", () => {
+        fetch("/tag/current", { method: "DELETE" })
+            .then(r => r.json())
+            .then(d => { currentTagName.textContent = d.tag; });
+    });
+
+    const generate = () => {
+        const t = tag.value;
+        const seg = Math.max(1, parseInt(duration.value, 10) || 10);
+        scriptEl.value = `(() => {
+    const REPEAT_INTERVAL = 2000;        // 2 seconds
+    const END_TIME = ${seg * 1000}; // ${seg} seconds
+    const TAG = "${t}";
+
+    const interval = setInterval(() => {
+        const html = document.documentElement.outerHTML;
+
+        const phones = [
+            ...html.matchAll(
+                /(\\(\\d{2}\\)\\s*\\d{4,5}-\\d{4})/gi
+            )
+        ].map(m => m[1].replace(/\\D/g, ""));
+
+        if (phones.length > 0) {
+            fetch("http://127.0.0.1:5000/phones", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    phones: phones,
+                    tag: TAG
+                })
+            });
+        }
+    }, REPEAT_INTERVAL);
+
+    setTimeout(() => {
+        clearInterval(interval);
+    }, END_TIME);
+})();`;
+    };
+
+    const validate = () => {
+        const seg = parseInt(duration.value, 10);
+        const filled = tag.value !== "" && Number.isFinite(seg) && seg > 0;
+        btnCopy.disabled = !(activated && filled);
+    };
+
+    let activated = false;
+
+    form.addEventListener("submit", (e) => {
+        e.preventDefault();
+        fetch("/nmget", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                tag: tag.value
+            })
+        }).then(() => loadCurrentTag());
+        activated = true;
+        generate();
+        validate();
+    });
+
+    const update = () => {
+        generate();
+        validate();
+    };
+
+    tag.addEventListener("change", update);
+    duration.addEventListener("change", update);
+
+    update();
+    loadCurrentTag();
+
+    btnCopy.addEventListener("click", () => {
+        if (btnCopy.disabled) return;
+        navigator.clipboard.writeText(scriptEl.value);
+        btnCopy.textContent = "Copied!";
+        setTimeout(() => { btnCopy.textContent = "Copy"; }, 1500);
+    });
+})();
 </script>
 
 {% endblock %}
