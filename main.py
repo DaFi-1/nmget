@@ -320,3 +320,30 @@ def handle_error(error):
     app.logger.exception("Unhandled error: %s", error)
     return jsonify({"ok": False, "error": "internal error"}), 500
 
+
+@app.route('/queue')
+def queue_stats():
+    return jsonify({"items": Queue.stats(db)})
+
+
+@app.route('/queue/send', methods=['POST'])
+def queue_send():
+    data = request.get_json(silent=True)
+    tag = (data or {}).get("tag")
+    if tag:
+        Queue.move_tag(db, tag)
+    else:
+        Queue.move_to_numbers(db)
+    return jsonify({"ok": True})
+
+
+@app.route('/queue/clear', methods=['POST'])
+def queue_clear():
+    data = request.get_json(silent=True)
+    tag = (data or {}).get("tag")
+    if tag:
+        Queue.clear_tag(db, tag)
+    else:
+        Queue.clear_all(db)
+    return jsonify({"ok": True})
+
