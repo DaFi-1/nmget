@@ -273,3 +273,8 @@ def home():
 def dashboard():
     return render_template('dashboard.html')
 
+
+@app.route("/dashboard/data")
+def dashboard_data():
+    return jsonify(Number.stats(db))
+
