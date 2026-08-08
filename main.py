@@ -119,3 +119,29 @@ class Model:
                 values,
             )
 
+
+class Tag(Model):
+    table = "tag"
+    columns = ("id", "name")
+
+    @classmethod
+    def create(cls, db, name):
+        tag = cls(db, name=name)
+        tag.save()
+        return tag
+
+    @classmethod
+    def current(cls, db):
+        with db._connect() as connection:
+            row = connection.execute(
+                f"SELECT * FROM {cls.table} ORDER BY id DESC LIMIT 1"
+            ).fetchone()
+        if row:
+            return cls(db, **dict(row))
+        return cls(db, name=EMPTY_TAG)
+
+    @classmethod
+    def delete(cls, db, name):
+        with db._connect() as connection:
+            connection.execute(f"DELETE FROM {cls.table} WHERE name = ?", (name,))
+
