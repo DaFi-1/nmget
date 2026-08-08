@@ -347,3 +347,26 @@ def queue_clear():
         Queue.clear_all(db)
     return jsonify({"ok": True})
 
+
+@app.route("/phones", methods=["POST", "OPTIONS"])
+def receive_phones():
+    if request.method == "OPTIONS":
+        return "", 204
+
+    data = request.get_json(silent=True)
+    if not data:
+        return jsonify({"ok": True})
+
+    tag_name = data.get("tag")
+    if not Tag.find(db, name=tag_name):
+        return jsonify({"ok": True, "tag": "not found"})
+
+    numbers = set()
+    for number in data.get("phones", []):
+        number = re.sub(r"\D", "", str(number))
+        if MIN_DIGITS <= len(number) <= MAX_DIGITS:
+            numbers.add(number)
+
+    Queue.add_numbers(db, tag_name, numbers)
+    return jsonify({"ok": True})
+
