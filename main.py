@@ -375,3 +375,7 @@ def receive_phones():
 def config():
     return render_template('config.html')
 
+
+if __name__ == "__main__":
+    db._initialize()
+    app.run(debug=True)
