@@ -511,6 +511,13 @@ tbody tr:hover {
 
     let prevStats = "";
 
+    const escapeHtml = (v) => String(v)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#39;");
+
     const renderStats = (d) => {
         statsBody.innerHTML = "";
         let total = 0;
@@ -519,11 +526,11 @@ tbody tr:hover {
             const tr = document.createElement("tr");
             tr.style.animationDelay = `${i * 60}ms`;
             tr.innerHTML =
-                `<td>${item.tag}</td>` +
-                `<td class="num" data-value="${item.quantity}">0</td>` +
+                `<td>${escapeHtml(item.tag)}</td>` +
+                `<td class="num" data-value="${escapeHtml(item.quantity)}">0</td>` +
                 `<td><div class="row-actions">` +
-                `<button class="btn-row btn-row-add" data-tag="${item.tag}">Add</button>` +
-                `<button class="btn-row btn-row-del" data-tag="${item.tag}">Delete</button>` +
+                `<button class="btn-row btn-row-add" data-tag="${escapeHtml(item.tag)}">Add</button>` +
+                `<button class="btn-row btn-row-del" data-tag="${escapeHtml(item.tag)}">Delete</button>` +
                 `</div></td>`;
             statsBody.appendChild(tr);
         });

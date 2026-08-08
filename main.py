@@ -312,6 +312,8 @@ def add_cors(response):
     response.headers["Access-Control-Allow-Origin"] = "*"
     response.headers["Access-Control-Allow-Headers"] = "Content-Type"
     response.headers["Access-Control-Allow-Methods"] = "POST, OPTIONS"
+    if not request.path.startswith("/static/"):
+        response.headers["Cache-Control"] = "no-store"
     return response
 
 
