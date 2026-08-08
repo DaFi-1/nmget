@@ -314,3 +314,9 @@ def add_cors(response):
     response.headers["Access-Control-Allow-Methods"] = "POST, OPTIONS"
     return response
 
+
+@app.errorhandler(Exception)
+def handle_error(error):
+    app.logger.exception("Unhandled error: %s", error)
+    return jsonify({"ok": False, "error": "internal error"}), 500
+
