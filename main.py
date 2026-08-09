@@ -12,6 +12,7 @@ from flask import (
     jsonify,
     request,
 )
+from werkzeug.exceptions import HTTPException
 
 app = Flask(__name__)
 app.config["TEMPLATES_AUTO_RELOAD"] = True
@@ -338,6 +339,8 @@ def add_cors(response):
 
 @app.errorhandler(Exception)
 def handle_error(error):
+    if isinstance(error, HTTPException):
+        return error
     app.logger.exception("Unhandled error: %s", error)
     return jsonify({"ok": False, "error": "internal error"}), 500
 
