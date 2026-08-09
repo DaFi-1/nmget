@@ -1,3 +1,4 @@
+import hashlib
 import os
 import re
 import sqlite3
@@ -256,6 +257,22 @@ class Queue(Model):
 
 db = Database()
 
+_STATIC_HASHES = {}
+
+
+@app.context_processor
+def inject_static_version():
+    def version(filename):
+        try:
+            with open(
+                os.path.join(BASE_DIR, "static", filename), "rb"
+            ) as f:
+                return hashlib.md5(f.read()).hexdigest()[:8]
+        except OSError:
+            return "0"
+
+    return {"version": version}
+
 
 @app.before_request
 def ensure_db():
@@ -312,7 +329,9 @@ def add_cors(response):
     response.headers["Access-Control-Allow-Origin"] = "*"
     response.headers["Access-Control-Allow-Headers"] = "Content-Type"
     response.headers["Access-Control-Allow-Methods"] = "POST, OPTIONS"
-    if not request.path.startswith("/static/"):
+    if request.path.startswith("/static/"):
+        response.headers["Cache-Control"] = "public, max-age=31536000, immutable"
+    else:
         response.headers["Cache-Control"] = "no-store"
     return response
 
