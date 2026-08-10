@@ -1,4 +1,5 @@
 import hashlib
+import json
 import os
 import re
 import sqlite3
@@ -11,6 +12,8 @@ from flask import (
     redirect,
     jsonify,
     request,
+    make_response,
+    send_file,
 )
 from werkzeug.exceptions import HTTPException
 
@@ -32,6 +35,14 @@ MAX_TAG_LENGTH = 50
 
 def now():
     return datetime.now().strftime(DATE_FORMAT)
+
+
+def digits(value):
+    return re.sub(r"\D", "", str(value))
+
+
+def json_data():
+    return request.get_json(silent=True) or {}
 
 
 class Database:
