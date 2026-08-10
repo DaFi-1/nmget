@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="icon" href="data:,">
+    <title>nmGET</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}?v={{ version('css/style.css') }}">
+    <link rel="preload" as="font" type="font/ttf" crossorigin href="{{ url_for('static', filename='fonts/TerminessNerdFont-Bold.ttf') }}">
+    <link rel="preload" as="font" type="font/ttf" crossorigin href="{{ url_for('static', filename='fonts/TerminessNerdFontMono-Regular.ttf') }}">
+    <script defer src="{{ url_for('static', filename='vendor/htmx.min.js') }}?v={{ version('vendor/htmx.min.js') }}"></script>
+    <script>
+      window.__VER__ = {
+        "js/app.js": {{ version("js/app.js")|tojson }},
+        "js/pages/dashboard.js": {{ version("js/pages/dashboard.js")|tojson }},
+        "js/pages/nmget.js": {{ version("js/pages/nmget.js")|tojson }},
+        "js/pages/ngenerate.js": {{ version("js/pages/ngenerate.js")|tojson }},
+        "js/pages/config.js": {{ version("js/pages/config.js")|tojson }},
+        "vendor/chart.umd.min.js": {{ version("vendor/chart.umd.min.js")|tojson }}
+      };
+    </script>
+  </head>
+  <body>
+    <div id="container">
+      <aside id="sidebar" aria-label="Navigation">
+        <canvas id="matrix-rain" aria-hidden="true"></canvas>
+        <p class="brand">nm<span>GET</span></p>
+        <nav>
+          <ul>
+            <li><a class="icon-dashboard {{ 'active' if request.endpoint == 'dashboard.dashboard' else '' }}" data-nav="dashboard" href="{{url_for('dashboard.dashboard')}}" hx-get="{{url_for('dashboard.dashboard')}}" hx-target="#app" hx-select="#app" hx-swap="innerHTML transition:true" hx-push-url="true">Dashboard</a></li>
+            <li><a class="icon-nmget {{ 'active' if request.endpoint == 'nmget.nmget' else '' }}" data-nav="nmget" href="{{url_for('nmget.nmget')}}" hx-get="{{url_for('nmget.nmget')}}" hx-target="#app" hx-select="#app" hx-swap="innerHTML transition:true" hx-push-url="true">Nmget</a></li>
+            <li><a class="icon-ngenerate {{ 'active' if request.endpoint == 'ngenerate.ngenerate' else '' }}" data-nav="ngenerate" href="{{url_for('ngenerate.ngenerate')}}" hx-get="{{url_for('ngenerate.ngenerate')}}" hx-target="#app" hx-select="#app" hx-swap="innerHTML transition:true" hx-push-url="true">Ngenerate</a></li>
+            <li><a class="icon-config {{ 'active' if request.endpoint == 'config.config' else '' }}" data-nav="config" href="{{url_for('config.config')}}" hx-get="{{url_for('config.config')}}" hx-target="#app" hx-select="#app" hx-swap="innerHTML transition:true" hx-push-url="true">Config</a></li>
+          </ul>
+        </nav>
+        <p class="brand-foot">local capture</p>
+      </aside>
+
+      <div id="shell">
+        <header id="topbar">
+          <span id="page-title" class="topbar-title">Dashboard</span>
+          <span id="conn-dot" class="conn-dot" title="Status"></span>
+        </header>
+        <div id="progress" class="progress" aria-hidden="true"></div>
+        <main id="app" tabindex="-1"> {% block content %}{% endblock %}</main>
+      </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/app.js') }}?v={{ version('js/app.js') }}"></script>
+  </body>
+</html>
