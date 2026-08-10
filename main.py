@@ -325,8 +325,7 @@ def delete_current_tag():
 @app.route('/nmget', methods=['GET', 'POST'])
 def nmget():
     if request.method == "POST":
-        data = request.get_json(silent=True)
-        tag_name = ((data or {}).get("tag") or "").strip()[:MAX_TAG_LENGTH]
+        tag_name = (json_data().get("tag") or "").strip()[:MAX_TAG_LENGTH]
         if tag_name:
             try:
                 Tag.create(db, name=tag_name)
@@ -363,8 +362,7 @@ def queue_stats():
 
 @app.route('/queue/send', methods=['POST'])
 def queue_send():
-    data = request.get_json(silent=True)
-    tag = (data or {}).get("tag")
+    tag = json_data().get("tag")
     if tag:
         Queue.move_tag(db, tag)
     else:
@@ -374,8 +372,7 @@ def queue_send():
 
 @app.route('/queue/clear', methods=['POST'])
 def queue_clear():
-    data = request.get_json(silent=True)
-    tag = (data or {}).get("tag")
+    tag = json_data().get("tag")
     if tag:
         Queue.clear_tag(db, tag)
     else:
@@ -398,7 +395,7 @@ def receive_phones():
 
     numbers = set()
     for number in data.get("phones", []):
-        number = re.sub(r"\D", "", str(number))
+        number = digits(number)
         if MIN_DIGITS <= len(number) <= MAX_DIGITS:
             numbers.add(number)
 
