@@ -240,13 +240,12 @@ class Queue(Model):
     @classmethod
     def add_numbers(cls, db, tag, numbers):
         with db._connect() as connection:
-            for number in numbers:
-                connection.execute(
-                    "INSERT OR IGNORE INTO queue (number, tag) "
-                    "SELECT ?, ? WHERE NOT EXISTS "
-                    "(SELECT 1 FROM numbers WHERE number = ?)",
-                    (number, tag, number),
-                )
+            connection.executemany(
+                "INSERT OR IGNORE INTO queue (number, tag) "
+                "SELECT ?, ? WHERE NOT EXISTS "
+                "(SELECT 1 FROM numbers WHERE number = ?)",
+                [(number, tag, number) for number in numbers],
+            )
 
     @classmethod
     def _move(cls, db, filter_="", values=()):
@@ -296,22 +295,23 @@ _STATIC_HASHES = {}
 @app.context_processor
 def inject_static_version():
     def version(filename):
+        path = os.path.join(BASE_DIR, "static", filename)
         try:
-            with open(
-                os.path.join(BASE_DIR, "static", filename), "rb"
-            ) as f:
-                return hashlib.md5(f.read()).hexdigest()[:8]
+            mtime = os.stat(path).st_mtime_ns
         except OSError:
             return "0"
+        entry = _STATIC_HASHES.get(filename)
+        if entry and entry[0] == mtime:
+            return entry[1]
+        try:
+            with open(path, "rb") as f:
+                digest = hashlib.md5(f.read()).hexdigest()[:8]
+        except OSError:
+            return "0"
+        _STATIC_HASHES[filename] = (mtime, digest)
+        return digest
 
     return {"version": version}
-
-
-@app.before_request
-def ensure_db():
-    if request.path.startswith("/static/"):
-        return
-    db._initialize()
 
 
 @app.route('/')
