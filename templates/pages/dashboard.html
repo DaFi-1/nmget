@@ -1,0 +1,51 @@
+{% extends "layouts/base.html" %}
+
+{% block content %}
+<div id="dashboard" data-page="dashboard" data-page-title="Dashboard">
+  <div class="grid grid-cards">
+    <section class="component">
+      <p class="card-label">Total numbers</p>
+      <p id="card-total" class="card-value">0</p>
+    </section>
+    <section class="component">
+      <p class="card-label">Pending (ON)</p>
+      <p id="card-on" class="card-value">0</p>
+    </section>
+    <section class="component">
+      <p class="card-label">Sent (OFF)</p>
+      <p id="card-off" class="card-value">0</p>
+    </section>
+    <section class="component">
+      <p class="card-label">Captured today</p>
+      <p id="card-today" class="card-value">0</p>
+    </section>
+    <section class="component">
+      <p class="card-label">Distinct tags</p>
+      <p id="card-tags" class="card-value">0</p>
+    </section>
+    <section class="component">
+      <p class="card-label">Last capture</p>
+      <p id="card-last" class="card-value" style="font-size:16px">—</p>
+    </section>
+  </div>
+
+  <div class="grid grid-charts">
+    <section class="component">
+      <h2 class="component-title">Overall status</h2>
+      <div class="chart-wrap"><canvas id="chart-status"></canvas></div>
+    </section>
+    <section class="component">
+      <h2 class="component-title">Status by tag</h2>
+      <div class="chart-wrap"><canvas id="chart-status-tag"></canvas></div>
+    </section>
+    <section class="component">
+      <h2 class="component-title">Numbers by tag</h2>
+      <div class="chart-wrap"><canvas id="chart-tag"></canvas></div>
+    </section>
+    <section class="component">
+      <h2 class="component-title">Captures per day</h2>
+      <div class="chart-wrap"><canvas id="chart-day"></canvas></div>
+    </section>
+  </div>
+</div>
+{% endblock %}
