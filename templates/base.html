@@ -19,6 +19,7 @@
           <ul>
             <li><a class="icon-dashboard {{ 'active' if request.endpoint == 'dashboard' else '' }}" href="{{url_for('dashboard')}}">Dashboard</a></li>
             <li><a class="icon-nmget {{ 'active' if request.endpoint == 'nmget' else '' }}" href="{{url_for('nmget')}}">Nmget</a></li>
+            <li><a class="icon-ngenerate {{ 'active' if request.endpoint == 'ngenerate' else '' }}" href="{{url_for('ngenerate')}}">Ngenerate</a></li>
             <li><a class="icon-config {{ 'active' if request.endpoint == 'config' else '' }}" href="{{url_for('config')}}">Config</a></li>
           </ul>
         </nav>

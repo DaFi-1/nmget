@@ -137,6 +137,7 @@ button {background: none;border: none;cursor: pointer;}
 
 #container aside nav a.icon-dashboard::before { content:"\f0e4"; }
 #container aside nav a.icon-nmget::before { content:"\f019"; }
+#container aside nav a.icon-ngenerate::before { content:"\f0e7"; }
 #container aside nav a.icon-config::before { content:"\f013"; }
 
 #container aside nav a:hover {
@@ -251,6 +252,335 @@ button {background: none;border: none;cursor: pointer;}
   #dashboard .chart-wrap { min-height:260px; }
 }
 
+/* config */
+#config {
+  height:100%;
+  padding:20px;
+  overflow:hidden;
+}
+
+#config .grid {
+  display:grid;
+  grid-template-columns:360px 1fr;
+  gap:16px;
+  height:100%;
+}
+
+#config .column {
+  display:flex;
+  flex-direction:column;
+  gap:16px;
+  min-height:0;
+}
+
+#config .component {
+  background:var(--card-bg);
+  border:1px solid #00ff00;
+  border-radius:12px;
+  padding:16px 18px;
+}
+
+#config .component-preview {
+  flex:1;
+  min-height:0;
+  display:flex;
+  flex-direction:column;
+}
+
+#config .component-preview iframe {
+  flex:1;
+  width:100%;
+  min-height:0;
+  border:1px solid var(--border);
+  border-radius:10px;
+  background:#fff;
+  color:#000;
+}
+
+#config .field {
+  display:flex;
+  flex-direction:column;
+  gap:6px;
+  margin-bottom:14px;
+}
+
+#config .field label {
+  font-size:11px;
+  color:var(--text-soft);
+  text-transform:uppercase;
+  letter-spacing:0.8px;
+}
+
+#config .field select,
+#config .field input {
+  background:var(--input-bg);
+  border:1px solid #00ff00;
+  border-radius:10px;
+  color:var(--text);
+  padding:10px 12px;
+  font-size:14px;
+  outline:none;
+  transition:border-color 0.2s, background 0.2s;
+}
+
+#config .field select:focus,
+#config .field input:focus {
+  border-color:var(--green);
+  background:var(--input-bg);
+}
+
+#config .btn-primary {
+  background:var(--green-light);
+  color:#000;
+  font-weight:700;
+  padding:12px;
+  border-radius:10px;
+  font-size:14px;
+  transition:background 0.2s;
+  width:100%;
+}
+
+#config .btn-primary:hover {
+  background:var(--green-bright);
+}
+
+#config .btn-primary:disabled {
+  background:var(--text-dim);
+  color:var(--text);
+  cursor:not-allowed;
+  opacity:0.5;
+}
+
+#config .hint {
+  font-size:11px;
+  color:var(--text-dim);
+  margin-top:10px;
+}
+
+.modal {
+  position:fixed;
+  inset:0;
+  background:rgba(0, 0, 0, 0.8);
+  display:none;
+  align-items:center;
+  justify-content:center;
+  z-index:100;
+}
+
+.modal.show {
+  display:flex;
+}
+
+.modal-box {
+  background:var(--card-bg);
+  border:1px solid #00ff00;
+  border-radius:12px;
+  padding:20px;
+  min-width:320px;
+  max-width:90vw;
+  text-align:center;
+  box-shadow:0 0 30px rgba(0, 255, 0, 0.15);
+}
+
+.modal-box p {
+  font-size:14px;
+  color:var(--text);
+  word-break:break-word;
+}
+
+.modal-actions {
+  display:flex;
+  gap:10px;
+  margin-top:18px;
+}
+
+.modal-actions button {
+  flex:1;
+  padding:11px;
+  font-size:14px;
+  font-weight:700;
+  border-radius:10px;
+}
+
+.modal-box .btn-danger {
+  background:transparent;
+  border:1px solid #ef4444;
+  color:#ef4444;
+}
+
+.modal-box .btn-danger:hover {
+  background:#ef4444;
+  color:#fff;
+}
+
+/* settings */
+#settings {
+  height:100%;
+  padding:20px;
+  overflow-y:auto;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+
+#settings .grid {
+  display:grid;
+  grid-template-columns:1fr;
+  gap:16px;
+  width:100%;
+  max-width:420px;
+  align-items:stretch;
+}
+
+#settings .component {
+  background:var(--card-bg);
+  border:1px solid #00ff00;
+  border-radius:12px;
+  padding:16px 18px;
+}
+
+#settings .field {
+  display:flex;
+  flex-direction:column;
+  gap:6px;
+  margin-bottom:14px;
+}
+
+#settings .field label {
+  font-size:11px;
+  color:var(--text-soft);
+  text-transform:uppercase;
+  letter-spacing:0.8px;
+}
+
+#settings .field input {
+  background:var(--input-bg);
+  border:1px solid #00ff00;
+  border-radius:10px;
+  color:var(--text);
+  padding:10px 12px;
+  font-size:14px;
+  outline:none;
+}
+
+#settings .drop-zone {
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:8px;
+  padding:28px 16px;
+  border:2px dashed var(--border-light);
+  border-radius:12px;
+  cursor:pointer;
+  text-align:center;
+  background:var(--input-bg);
+  margin-bottom:14px;
+  transition:border-color 0.2s, background 0.2s;
+}
+
+#settings .drop-zone:hover,
+#settings .drop-zone.dragover {
+  border-color:var(--green);
+  background:rgba(0, 255, 0, 0.06);
+}
+
+#settings .drop-zone .drop-icon::before {
+  content:"\f0ee";
+  font-family:"TerminessNerdFont-Bold", system-ui, sans-serif;
+  font-size:36px;
+  line-height:1;
+  color:var(--green);
+  transition:transform 0.2s;
+}
+
+#settings .drop-zone:hover .drop-icon::before,
+#settings .drop-zone.dragover .drop-icon::before {
+  transform:translateY(-4px);
+}
+
+#settings .drop-zone.ready .drop-icon::before {
+  content:"\f00c";
+  color:var(--green-bright);
+}
+
+#settings .drop-zone .drop-text {
+  font-size:13px;
+  color:var(--text-soft);
+}
+
+#settings .drop-zone .drop-name {
+  font-size:12px;
+  color:var(--green);
+  word-break:break-all;
+}
+
+#settings .btn-primary {
+  display:block;
+  background:var(--green-light);
+  color:#000;
+  font-weight:700;
+  padding:12px;
+  border-radius:10px;
+  font-size:14px;
+  text-align:center;
+  transition:background 0.2s;
+  width:100%;
+}
+
+#settings .btn-primary:hover {
+  background:var(--green-bright);
+}
+
+#settings .btn-primary:disabled {
+  background:var(--text-dim);
+  color:var(--text);
+  cursor:not-allowed;
+  opacity:0.5;
+}
+
+#settings .btn-export::before {
+  content:"\f0ed";
+  font-family:"TerminessNerdFont-Bold", system-ui, sans-serif;
+  margin-right:8px;
+}
+
+#settings .btn-import::before {
+  content:"\f093";
+  font-family:"TerminessNerdFont-Bold", system-ui, sans-serif;
+  margin-right:8px;
+}
+
+#settings .hint {
+  font-size:11px;
+  color:var(--text-dim);
+  margin-top:10px;
+}
+
+@media (max-width:900px) {
+  #settings .grid {
+    grid-template-columns:1fr;
+  }
+}
+
+@media (max-width:900px) {
+  #config {
+    height:auto;
+    overflow:visible;
+  }
+  #config .grid {
+    grid-template-columns:1fr;
+    height:auto;
+  }
+  #config .component-preview {
+    min-height:420px;
+  }
+  #config .component-preview iframe {
+    flex:none;
+    height:420px;
+  }
+}
+
 /* nmget */
 #nmget {
   height:100%;
@@ -341,6 +671,11 @@ button {background: none;border: none;cursor: pointer;}
 
 #nmget .btn-primary:hover {
   background:var(--green-bright);
+}
+
+#nmget .btn-add {
+  align-self:flex-end;
+  padding:12px 20px;
 }
 
 #nmget #current-tag-name {

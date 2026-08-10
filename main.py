@@ -223,6 +223,39 @@ class Number(Model):
             "status_by_tag": [dict(row) for row in status_by_tag],
         }
 
+    @classmethod
+    def pending_for_tag(cls, db, tag, limit):
+        with db._connect() as connection:
+            rows = connection.execute(
+                "SELECT number FROM numbers WHERE tag = ? AND status = ? "
+                "ORDER BY date_get_number ASC LIMIT ?",
+                (tag, STATUS_PENDING, limit),
+            ).fetchall()
+        return [row["number"] for row in rows]
+
+    @classmethod
+    def pending_counts(cls, db):
+        with db._connect() as connection:
+            rows = connection.execute(
+                "SELECT tag, COUNT(id) AS quantity FROM numbers "
+                "WHERE status = ? GROUP BY tag ORDER BY tag",
+                (STATUS_PENDING,),
+            ).fetchall()
+        return [dict(row) for row in rows]
+
+    @classmethod
+    def mark_sent(cls, db, numbers):
+        if not numbers:
+            return
+        moment = now()
+        placeholders = ",".join("?" for _ in numbers)
+        with db._connect() as connection:
+            connection.execute(
+                f"UPDATE numbers SET status = ?, send_date = ? "
+                f"WHERE number IN ({placeholders})",
+                [STATUS_SENT, moment] + numbers,
+            )
+
 
 class Queue(Model):
     table = "queue"
@@ -407,11 +440,29 @@ def config_import():
     return jsonify({"ok": True})
 
 
+@app.route('/tags', methods=['GET'])
+def list_tags():
+    return jsonify({"tags": [tag.name for tag in TagName.all(db)]})
+
+
+@app.route('/tags', methods=['POST'])
+def create_tag():
+    name = (json_data().get("name") or "").strip()[:MAX_TAG_LENGTH]
+    if not name:
+        return jsonify({"ok": False, "error": "empty name"}), 400
+    try:
+        TagName.create(db, name=name)
+    except sqlite3.IntegrityError:
+        return jsonify({"ok": False, "error": "duplicate"}), 409
+    return jsonify({"ok": True, "name": name})
+
+
 @app.after_request
 def add_cors(response):
-    response.headers["Access-Control-Allow-Origin"] = "*"
-    response.headers["Access-Control-Allow-Headers"] = "Content-Type"
-    response.headers["Access-Control-Allow-Methods"] = "POST, OPTIONS"
+    if request.path == "/phones":
+        response.headers["Access-Control-Allow-Origin"] = "*"
+        response.headers["Access-Control-Allow-Headers"] = "Content-Type"
+        response.headers["Access-Control-Allow-Methods"] = "POST, OPTIONS"
     if request.path.startswith("/static/"):
         response.headers["Cache-Control"] = "public, max-age=31536000, immutable"
     else:
@@ -475,9 +526,165 @@ def receive_phones():
     return jsonify({"ok": True})
 
 
-@app.route('/config')
-def config():
-    return render_template('config.html')
+def wa_number(number):
+    digits_number = digits(number)
+    if digits_number.startswith("55"):
+        return digits_number
+    return "55" + digits_number
+
+
+def esc_html(value):
+    return (
+        str(value)
+        .replace("&", "&amp;")
+        .replace("<", "&lt;")
+        .replace(">", "&gt;")
+        .replace('"', "&quot;")
+    )
+
+
+def build_whatsapp_html(tag, numbers, dark=False):
+    items = "\n".join(
+        f'        <li>\n'
+        f'            <a href="https://wa.me/{wa_number(number)}" target="_blank">\n'
+        f'                +55 {number}\n'
+        f'            </a>\n'
+        f'        </li>'
+        for number in numbers
+    )
+    if dark:
+        bg, text, link, visited = "#000000", "#e5e5e5", "#66b3ff", "#ff5252"
+    else:
+        bg, text, link, visited = "#ffffff", "#222222", "#0645ad", "#cc0000"
+    return f'''<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Lista de WhatsApp - {esc_html(tag)}</title>
+    <style>
+        body {{
+            font-family: system-ui, sans-serif;
+            line-height: 1.8;
+            padding: 20px;
+            background: {bg};
+            color: {text};
+        }}
+        h2 {{
+            font-size: 20px;
+        }}
+        ol {{
+            padding-left: 24px;
+        }}
+        li {{
+            padding: 4px 0;
+        }}
+        a {{
+            color: {link};
+            text-decoration: none;
+            cursor: pointer;
+        }}
+        a:visited,
+        a.clicked {{
+            color: {visited};
+            text-decoration: line-through;
+        }}
+        a:hover {{
+            text-decoration: underline;
+        }}
+    </style>
+</head>
+<body>
+
+    <h2>Lista de números - {esc_html(tag)}</h2>
+
+    <ol>
+{items}
+    </ol>
+
+    <script>
+        (() => {{
+            const KEY = "nmget-clicked";
+            let clicked = new Set();
+            try {{
+                clicked = new Set(JSON.parse(localStorage.getItem(KEY) || "[]"));
+            }} catch (e) {{}}
+
+            const paint = (a) => {{
+                if (clicked.has(a.href)) a.classList.add("clicked");
+            }};
+
+            const track = (a) => {{
+                clicked.add(a.href);
+                a.classList.add("clicked");
+                try {{
+                    localStorage.setItem(KEY, JSON.stringify([...clicked]));
+                }} catch (e) {{}}
+            }};
+
+            document.querySelectorAll("a").forEach((a) => {{
+                paint(a);
+                a.addEventListener("click", () => track(a));
+            }});
+        }})();
+    </script>
+</body>
+</html>
+'''
+
+
+@app.route('/ngenerate')
+def ngenerate():
+    return render_template('ngenerate.html')
+
+
+@app.route('/ngenerate/tags')
+def ngenerate_tags():
+    return jsonify({"items": Number.pending_counts(db)})
+
+
+@app.route('/ngenerate/generate', methods=['POST'])
+def ngenerate_generate():
+    data = json_data()
+    tag = (data.get("tag") or "").strip()
+    try:
+        limit = max(1, min(int(data.get("quantity", 10)), 5000))
+    except (TypeError, ValueError):
+        limit = 10
+    numbers = Number.pending_for_tag(db, tag, limit)
+    dark = bool(data.get("dark"))
+    html = build_whatsapp_html(tag, numbers, dark=dark)
+    return jsonify({
+        "ok": True,
+        "tag": tag,
+        "count": len(numbers),
+        "numbers": numbers,
+        "html": html,
+    })
+
+
+@app.route('/ngenerate/download', methods=['POST'])
+def ngenerate_download():
+    data = request.get_json(silent=True)
+    if data is None:
+        try:
+            data = json.loads(request.form.get("payload", "{}"))
+        except ValueError:
+            data = {}
+    data = data or {}
+    tag = (data.get("tag") or "").strip()
+    numbers = [
+        n for n in (data.get("numbers") or [])
+        if re.fullmatch(r"\d+", str(n))
+    ]
+    Number.mark_sent(db, numbers)
+    dark = bool(data.get("dark"))
+    safe = re.sub(r"[^A-Za-z0-9._-]+", "-", tag).strip("-") or "lista"
+    response = make_response(build_whatsapp_html(tag, numbers, dark=dark))
+    response.mimetype = "text/html"
+    response.headers["Content-Disposition"] = (
+        f'attachment; filename="lista-{safe}.html"'
+    )
+    return response
 
 
 if __name__ == "__main__":

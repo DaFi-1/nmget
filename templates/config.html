@@ -1,5 +1,99 @@
 {% extends "base.html" %}
 
-{% block content %} 
-<h1>Config</h1>
+{% block content %}
+<div id="settings">
+  <div class="grid">
+    <section class="component">
+      <h2 class="component-title">Export database</h2>
+      <p class="hint">Download the current database (nmget.db).</p>
+      <a href="{{ url_for('config_export') }}" class="btn-primary btn-export">Export database</a>
+    </section>
+
+    <section class="component">
+      <h2 class="component-title">Import database</h2>
+      <p class="hint">Replace the current database with an exported one. The current one is kept as a backup.</p>
+      <form id="form-import" method="POST" action="{{ url_for('config_import') }}" enctype="multipart/form-data">
+        <label id="drop-zone" class="drop-zone" for="import-file">
+          <input id="import-file" name="file" type="file" accept=".db,.sqlite,.sqlite3" hidden>
+          <span class="drop-icon"></span>
+          <span id="drop-text" class="drop-text">Click to choose or drop the file here</span>
+          <span id="drop-name" class="drop-name" hidden></span>
+        </label>
+        <button type="submit" id="btn-import" class="btn-primary btn-import">Import database</button>
+      </form>
+      <p id="import-msg" class="hint"></p>
+    </section>
+  </div>
+</div>
+
+<script>
+(() => {
+    const form = document.getElementById("form-import");
+    const file = document.getElementById("import-file");
+    const btnImport = document.getElementById("btn-import");
+    const msg = document.getElementById("import-msg");
+    const zone = document.getElementById("drop-zone");
+    const dropText = document.getElementById("drop-text");
+    const dropName = document.getElementById("drop-name");
+
+    const setFile = (f) => {
+        if (!f) return;
+        dropName.textContent = f.name;
+        dropName.hidden = false;
+        dropText.textContent = "File ready to import";
+        zone.classList.add("ready");
+    };
+
+    file.addEventListener("change", () => setFile(file.files[0]));
+
+    ["dragover", "dragenter"].forEach(ev => zone.addEventListener(ev, (e) => {
+        e.preventDefault();
+        zone.classList.add("dragover");
+    }));
+    ["dragleave", "drop"].forEach(ev => zone.addEventListener(ev, (e) => {
+        e.preventDefault();
+        zone.classList.remove("dragover");
+    }));
+    zone.addEventListener("drop", (e) => {
+        const f = e.dataTransfer.files[0];
+        if (f) {
+            file.files = e.dataTransfer.files;
+            setFile(f);
+        }
+    });
+
+    form.addEventListener("submit", (e) => {
+        e.preventDefault();
+        if (!file.files.length) {
+            msg.textContent = "Select a file.";
+            msg.style.color = "#ef4444";
+            return;
+        }
+        const data = new FormData();
+        data.append("file", file.files[0]);
+        btnImport.disabled = true;
+        msg.textContent = "Importing...";
+        msg.style.color = "var(--text-dim)";
+        fetch("{{ url_for('config_import') }}", {
+            method: "POST",
+            body: data
+        }).then(r => r.json()).then(d => {
+            btnImport.disabled = false;
+            if (d.ok) {
+                msg.textContent = "Database imported.";
+                msg.style.color = "var(--green)";
+                file.value = "";
+                dropName.hidden = true;
+                dropText.textContent = "Click to choose or drop the file here";
+                zone.classList.remove("ready");
+                setTimeout(() => window.location.reload(), 1200);
+            } else {
+                msg.textContent = d.error || "Error.";
+                msg.style.color = "#ef4444";
+            }
+        });
+    });
+})();
+</script>
+
 {% endblock %}
