@@ -1,0 +1,101 @@
+{% extends "layouts/base.html" %}
+
+{% block content %}
+<div id="nmget" data-page="nmget" data-page-title="Nmget">
+  <div class="grid">
+    <div class="column">
+      <section class="component component-script">
+        <h2 class="component-title">Generated script</h2>
+        <textarea id="script" readonly spellcheck="false"></textarea>
+        <button id="btn-copy" class="copy-btn" disabled>Copy</button>
+        <p class="hint">Choose the tag and time, activate and copy the script.</p>
+      </section>
+    </div>
+
+    <div class="column">
+      <section class="component">
+        <h2 class="component-title">Current tag</h2>
+        <p id="current-tag-name">EMPTY</p>
+        <button id="btn-delete-tag" class="btn-danger">Delete tag</button>
+      </section>
+
+      <section class="component">
+        <h2 class="component-title">Add tag</h2>
+        <form id="form-add-tag">
+          <div class="row">
+            <div class="field">
+              <label for="new-tag">Tag name</label>
+              <input id="new-tag" name="new-tag" type="text" maxlength="50" placeholder="New tag name">
+            </div>
+            <button type="submit" class="btn-primary btn-add">Add</button>
+          </div>
+        </form>
+        <p id="add-tag-msg" class="hint"></p>
+      </section>
+
+      <section class="component">
+        <h2 class="component-title">Configuration</h2>
+        <form id="form-nmget">
+          <div class="row">
+            <div class="field">
+              <label for="tag">Tag</label>
+              <select id="tag" name="tag">
+                <option value="" selected>Select the tag</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="duration">Duration</label>
+              <select id="duration" name="duration">
+                <option value="10">10s</option>
+                <option value="20">20s</option>
+                <option value="60">60s</option>
+                <option value="300">5m</option>
+                <option value="600">10m</option>
+                <option value="1800">30m</option>
+                <option value="3600">1h</option>
+              </select>
+            </div>
+          </div>
+          <button type="submit" class="btn-primary">Activate script</button>
+        </form>
+      </section>
+    </div>
+
+    <div class="column">
+      <section class="component component-stats">
+        <div class="stats-head">
+          <h2 class="component-title">Capture queue</h2>
+          <span>Total: <span id="stats-total">0</span></span>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Tag</th>
+                <th>Quantity</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="stats-body"></tbody>
+          </table>
+        </div>
+        <div class="stats-actions">
+          <button id="btn-send-all" class="btn-send">Send all</button>
+          <button id="btn-delete-all" class="btn-delete">Delete all</button>
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <div id="confirm-modal" class="modal">
+    <div class="modal-box">
+      <h2 class="component-title">Confirm</h2>
+      <p id="confirm-text"></p>
+      <div class="modal-actions">
+        <button id="btn-confirm-yes" class="btn-primary">Yes</button>
+        <button id="btn-confirm-no" class="btn-danger">No</button>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
