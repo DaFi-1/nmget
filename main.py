@@ -85,10 +85,18 @@ class Database:
                     number TEXT NOT NULL UNIQUE,
                     tag TEXT NOT NULL
                 );
+
+                CREATE TABLE IF NOT EXISTS tegname (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    name TEXT NOT NULL UNIQUE
+                );
                 """
             )
             connection.execute(
                 "INSERT OR IGNORE INTO tag (name) VALUES (?)", (EMPTY_TAG,)
+            )
+            connection.execute(
+                "INSERT OR IGNORE INTO tegname (name) VALUES (?)", (EMPTY_TAG,)
             )
             columns = [
                 row["name"]
@@ -117,6 +125,12 @@ class Model:
             ).fetchall()
         return [cls(db, **dict(row)) for row in rows]
 
+    @classmethod
+    def create(cls, db, **values):
+        obj = cls(db, **values)
+        obj.save()
+        return obj
+
     def save(self):
         columns = [
             column
@@ -138,12 +152,6 @@ class Tag(Model):
     columns = ("id", "name")
 
     @classmethod
-    def create(cls, db, name):
-        tag = cls(db, name=name)
-        tag.save()
-        return tag
-
-    @classmethod
     def current(cls, db):
         with db._connect() as connection:
             row = connection.execute(
@@ -157,6 +165,19 @@ class Tag(Model):
     def delete(cls, db, name):
         with db._connect() as connection:
             connection.execute(f"DELETE FROM {cls.table} WHERE name = ?", (name,))
+
+
+class TagName(Model):
+    table = "tegname"
+    columns = ("id", "name")
+
+    @classmethod
+    def all(cls, db):
+        with db._connect() as connection:
+            rows = connection.execute(
+                f"SELECT * FROM {cls.table} ORDER BY name"
+            ).fetchall()
+        return [cls(db, **dict(row)) for row in rows]
 
 
 class Number(Model):
