@@ -1,0 +1,61 @@
+{% extends "layouts/base.html" %}
+
+{% block content %}
+<div id="ngenerate" data-page="ngenerate" data-page-title="Ngenerate">
+  <div class="grid">
+    <div class="column">
+      <section class="component">
+        <h2 class="component-title">Generate list</h2>
+        <form id="form-config">
+          <div class="field">
+            <label for="cfg-tag">Tag</label>
+            <select id="cfg-tag" name="tag">
+              <option value="" selected>Select the tag</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="cfg-quantity">Quantity</label>
+            <input id="cfg-quantity" name="quantity" type="number" min="1" max="5000" value="10">
+          </div>
+          <div class="field">
+            <label for="cfg-theme">Background</label>
+            <select id="cfg-theme" name="theme">
+              <option value="black" selected>Black</option>
+              <option value="white">White</option>
+            </select>
+          </div>
+          <button type="submit" id="btn-generate" class="btn-primary">Generate</button>
+        </form>
+        <p id="cfg-info" class="hint"></p>
+      </section>
+    </div>
+
+    <div class="column">
+      <section class="component component-preview">
+        <h2 class="component-title">Preview</h2>
+        <iframe id="preview" sandbox="allow-same-origin allow-popups allow-popups-to-escape-sandbox" title="Preview"></iframe>
+      </section>
+
+      <section class="component">
+        <button id="btn-download" class="btn-primary" disabled>Download all</button>
+      </section>
+    </div>
+  </div>
+
+  <div id="dl-modal" class="modal">
+    <div class="modal-box">
+      <h2 class="component-title">Download</h2>
+      <p id="dl-modal-text"></p>
+      <div class="modal-actions">
+        <button id="btn-dl-yes" class="btn-primary">Yes</button>
+        <button id="btn-dl-no" class="btn-danger">No</button>
+      </div>
+    </div>
+  </div>
+
+  <iframe id="dl-frame" name="dl-frame" style="display:none"></iframe>
+  <form id="dl-form" method="POST" action="{{ url_for('ngenerate.ngenerate_download') }}" target="dl-frame">
+    <input type="hidden" name="payload" id="dl-payload">
+  </form>
+</div>
+{% endblock %}
