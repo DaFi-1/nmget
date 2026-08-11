@@ -8,6 +8,18 @@ from app.db import BUST_ALL, DB_PATH, BASE_DIR, cache_bust, db
 config_bp = Blueprint("config", __name__)
 
 
+def _remove_quietly(path):
+    try:
+        os.remove(path)
+    except OSError:
+        pass
+
+
+def _cleanup(db_path):
+    for suffix in ("-wal", "-shm"):
+        _remove_quietly(db_path + suffix)
+
+
 @config_bp.route("/config")
 def config():
     return render_template("pages/config.html")
@@ -17,6 +29,9 @@ def config():
 def config_export():
     if not os.path.exists(DB_PATH):
         return jsonify({"ok": False, "error": "database not found"}), 404
+    connection = db._connect()
+    connection.execute("PRAGMA wal_checkpoint(TRUNCATE)")
+    connection.close()
     return send_file(
         DB_PATH,
         as_attachment=True,
@@ -43,18 +58,18 @@ def config_import():
                 ).fetchall()
             }
         if not {"tag", "numbers", "queue"}.issubset(tables):
+            _cleanup(tmp)
             return jsonify({"ok": False, "error": "invalid database"}), 400
     except sqlite3.Error:
-        try:
-            os.remove(tmp)
-        except OSError:
-            pass
+        _cleanup(tmp)
         return jsonify({"ok": False, "error": "invalid file"}), 400
 
     backup = os.path.join(BASE_DIR, "instance", "nmget.db.bak")
     if os.path.exists(DB_PATH):
         os.replace(DB_PATH, backup)
+        _cleanup(backup)
     os.replace(tmp, DB_PATH)
+    _cleanup(tmp)
     db._initialize()
     cache_bust(*BUST_ALL)
     return jsonify({"ok": True})
