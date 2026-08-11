@@ -1,6 +1,6 @@
 # nmGET
 
-Captura e organização de números de telefone exibidos em páginas web para montar listas de contatos.
+**Number Map Get** — captura e organização de números de telefone do **Google Maps** para montar listas de contatos.
 
 ![License](https://img.shields.io/badge/licen%C3%A7a-GPL--3.0-blue.svg)
 ![Python](https://img.shields.io/badge/Python-3.10%2B-3776ab.svg)
@@ -11,71 +11,27 @@ Captura e organização de números de telefone exibidos em páginas web para mo
 
 ## 📸 Screenshots
 
-Slider com as capturas de tela do projeto. Clique nas bolinhas para navegar entre as imagens.
+Capturas de tela do projeto (uma abaixo da outra).
 
-<!--
-  Para trocar as fotos, basta substituir os endereços em src abaixo ou adicionar
-  mais slides. Para adicionar uma nova imagem: duplique um bloco
-  <div class="slider-slide">...</div>, insira o <input> e o <label> correspondentes
-  (slide-5, slide-6...) e acrescente a regra de translateX no <style>.
--->
+<!-- Para trocar as fotos, basta substituir os endereços em src abaixo. -->
 
-<div class="slider">
-  <input class="slider-radio" type="radio" name="slider" id="slide-1" checked>
-  <input class="slider-radio" type="radio" name="slider" id="slide-2">
-  <input class="slider-radio" type="radio" name="slider" id="slide-3">
-  <input class="slider-radio" type="radio" name="slider" id="slide-4">
-
-  <div class="slider-viewport">
-    <div class="slider-track">
-      <div class="slider-slide">
-        <img alt="Dashboard - nmGET" src="https://github.com/user-attachments/assets/2a7d7a89-de65-49ae-923c-bd59447785b4">
-      </div>
-      <div class="slider-slide">
-        <img alt="Geração de script - nmGET" src="https://github.com/user-attachments/assets/36b3d14d-f06c-40b5-9610-8e3e4f5ec403">
-      </div>
-      <div class="slider-slide">
-        <img alt="Listas de contatos - nmGET" src="https://github.com/user-attachments/assets/b577c98b-fb89-42d7-bb97-7eecad0b9218">
-      </div>
-      <div class="slider-slide">
-        <img alt="Configurações - nmGET" src="https://github.com/user-attachments/assets/a5078d3e-19ac-4307-b078-46b31d7c1c3b">
-      </div>
-    </div>
-  </div>
-
-  <div class="slider-nav">
-    <label for="slide-1"></label>
-    <label for="slide-2"></label>
-    <label for="slide-3"></label>
-    <label for="slide-4"></label>
-  </div>
-</div>
-
-<style>
-  .slider { max-width: 900px; margin: 0 auto 28px; }
-  .slider-radio { display: none; }
-  .slider-viewport { overflow: hidden; border-radius: 10px; border: 1px solid #d0d7de; }
-  .slider-track { display: flex; width: 400%; transition: transform .45s ease; }
-  .slider-slide { flex: 0 0 25%; width: 25%; }
-  .slider-slide img { width: 100%; display: block; }
-  #slide-1:checked ~ .slider-viewport .slider-track { transform: translateX(0); }
-  #slide-2:checked ~ .slider-viewport .slider-track { transform: translateX(-25%); }
-  #slide-3:checked ~ .slider-viewport .slider-track { transform: translateX(-50%); }
-  #slide-4:checked ~ .slider-viewport .slider-track { transform: translateX(-75%); }
-  .slider-nav { display: flex; justify-content: center; gap: 10px; margin-top: 12px; }
-  .slider-nav label { width: 14px; height: 14px; border-radius: 50%; background: #57606a; cursor: pointer; opacity: .35; transition: opacity .2s; }
-  #slide-1:checked ~ .slider-nav label:nth-child(1),
-  #slide-2:checked ~ .slider-nav label:nth-child(2),
-  #slide-3:checked ~ .slider-nav label:nth-child(3),
-  #slide-4:checked ~ .slider-nav label:nth-child(4) { opacity: 1; background: #238636; }
-</style>
+<img alt="Dashboard - nmGET" src="https://github.com/user-attachments/assets/2a7d7a89-de65-49ae-923c-bd59447785b4">
+<img alt="Geração de script - nmGET" src="https://github.com/user-attachments/assets/36b3d14d-f06c-40b5-9610-8e3e4f5ec403">
+<img alt="Listas de contatos - nmGET" src="https://github.com/user-attachments/assets/b577c98b-fb89-42d7-bb97-7eecad0b9218">
+<img alt="Configurações - nmGET" src="https://github.com/user-attachments/assets/a5078d3e-19ac-4307-b078-46b31d7c1c3b">
 
 ---
 
 ## 📖 Apresentação
 
-O **nmGET** é uma aplicação web que gera um **script JavaScript** para capturar números de telefone
-exibidos em uma página web e enviá-los a um servidor, onde ficam organizados por **etiquetas (tags)**.
+**nmGET** significa **Number Map Get**: a aplicação foi pensada, originalmente, para **extrair dados
+do Google Maps** — como números de telefone de estabelecimentos exibidos na página. Ainda hoje a
+principal forma de uso é abrir o Google Maps, colar o script gerado no console do navegador e capturar
+os números visíveis na região exibida.
+
+O nmGET gera um **script JavaScript** que coleta números de telefone de uma página web e os envia a um
+servidor, onde ficam organizados por **etiquetas (tags)**. **Futuras atualizações pretendem generalizar**
+a ferramenta para outras páginas de raspagem de números, além do Google Maps.
 
 Com os números capturados você pode:
 
@@ -103,7 +59,7 @@ educacional.
 ## ✨ Funcionalidades
 
 - **Geração de script de captura** — escolha a etiqueta e o tempo de execução (10s até 1h) e copie um script JS pronto.
-- **Captura automática** — o script lê a página aberta, coleta os números visíveis e envia ao servidor.
+- **Captura via Google Maps** — o script é colado no console do navegador na página do Google Maps e coleta os números visíveis no mapa. Futuras atualizações vão generalizar para outras páginas.
 - **Etiquetas (tags)** — crie, selecione e exclua etiquetas para organizar os contatos.
 - **Dashboard** — total de números, capturados hoje, última captura e gráficos (status, por etiqueta, por dia).
 - **Fila de captura** — números aguardando, com ações de enviar (movem para a base de contatos) e excluir.
@@ -230,19 +186,26 @@ código JavaScript pronto.
 
 Clique em **Copy**. O script vai para a área de transferência.
 
-**d) Execute na página alvo**
+**d) Execute no Google Maps**
 
-Abra a página que contém os números (qualquer site) e cole o script no **Console do navegador**
-(F12 → Console) e pressione Enter. Alternativamente, injete o código na própria página.
+Abra a página do **Google Maps** (https://maps.google.com) com os estabelecimentos que deseja
+capturar e cole o script no **Console do navegador** (F12 → Console) e pressione Enter.
+Alternativamente, injete o código na própria página.
+
+> O script lê os números que estão **visíveis na tela** (na região do mapa exibida). Role o mapa para
+> carregar mais resultados e refaça a varredura dentro do tempo escolhido.
+>
+> Esta é a única página de raspagem implementada até o momento. **Futuras atualizações vão
+> generalizar o nmGET para outras páginas de captura de números.**
 
 O script irá:
 
-1. varrer o documento por números de telefone (10 a 13 dígitos);
+1. varrer a página por números de telefone (10 a 13 dígitos);
 2. agrupar os números únicos e deduplicá-los;
 3. enviá-los ao servidor na etiqueta escolhida (via `POST /phones`);
 4. repetir a varredura a cada ~2s até o tempo escolhido expirar.
 
-> O navegador precisa estar com a página alvo **aberta** durante a captura.
+> O navegador precisa estar com o Google Maps **aberto** durante a captura.
 
 **e) Acompanhe a fila**
 
