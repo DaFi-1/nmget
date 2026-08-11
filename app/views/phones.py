@@ -35,7 +35,7 @@ def receive_phones():
         return jsonify({"ok": True})
 
     tag_name = data.get("tag")
-    if not Tag.find(db, name=tag_name):
+    if not Tag.exists(db, tag_name):
         return jsonify({"ok": True, "tag": "not found"})
 
     numbers = set()
