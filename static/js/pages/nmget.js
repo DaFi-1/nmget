@@ -239,7 +239,7 @@ App.register("nmget", {
     loadTags();
     loadCurrentTag();
     loadStats();
-    statsInterval = setInterval(loadStats, 2000);
+    statsInterval = setInterval(loadStats, 3000);
 
     btnCopy.addEventListener("click", () => {
       if (btnCopy.disabled) return;
