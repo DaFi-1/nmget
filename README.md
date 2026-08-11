@@ -1,110 +1,108 @@
 <img width="1536" height="551" alt="image" src="https://github.com/user-attachments/assets/001e3a59-547e-48d3-be9b-b8cf4d83913d" />
 
 
-**Number Map Get** — captura e organização de números de telefone do **Google Maps** para montar listas de contatos.
+**Number Map Get** — capture and organize phone numbers from **Google Maps** to build contact lists.
 
-![License](https://img.shields.io/badge/licen%C3%A7a-GPL--3.0-blue.svg)
+![License](https://img.shields.io/badge/license-GPL--3.0-blue.svg)
 ![Python](https://img.shields.io/badge/Python-3.10%2B-3776ab.svg)
 ![Flask](https://img.shields.io/badge/Flask-3.x-000000.svg)
-![SQLite](https://img.shields.io/badge/banco-SQLite-003b57.svg)
+![SQLite](https://img.shields.io/badge/database-SQLite-003b57.svg)
 
 ---
 
 ## 📸 Screenshots
 
-Capturas de tela do projeto (uma abaixo da outra).
+Project screenshots (one below the other).
 
-<!-- Para trocar as fotos, basta substituir os endereços em src abaixo. -->
+<!-- To change the pictures, just replace the src addresses below. -->
 
 <img alt="Dashboard - nmGET" src="https://github.com/user-attachments/assets/2a7d7a89-de65-49ae-923c-bd59447785b4">
-<img alt="Geração de script - nmGET" src="https://github.com/user-attachments/assets/36b3d14d-f06c-40b5-9610-8e3e4f5ec403">
-<img alt="Listas de contatos - nmGET" src="https://github.com/user-attachments/assets/b577c98b-fb89-42d7-bb97-7eecad0b9218">
-<img alt="Configurações - nmGET" src="https://github.com/user-attachments/assets/a5078d3e-19ac-4307-b078-46b31d7c1c3b">
+<img alt="Script generation - nmGET" src="https://github.com/user-attachments/assets/36b3d14d-f06c-40b5-9610-8e3e4f5ec403">
+<img alt="Contact lists - nmGET" src="https://github.com/user-attachments/assets/b577c98b-fb89-42d7-bb97-7eecad0b9218">
+<img alt="Settings - nmGET" src="https://github.com/user-attachments/assets/a5078d3e-19ac-4307-b078-46b31d7c1c3b">
 
 ---
 
-## 📖 Apresentação
+## 📖 About
 
-**nmGET** significa **Number Map Get**: a aplicação foi pensada, originalmente, para **extrair dados
-do Google Maps** — como números de telefone de estabelecimentos exibidos na página. Ainda hoje a
-principal forma de uso é abrir o Google Maps, colar o script gerado no console do navegador e capturar
-os números visíveis na região exibida.
+**nmGET** stands for **Number Map Get**: the application was originally designed to **extract data
+from Google Maps** — such as the phone numbers of businesses displayed on the page. The main way of
+using it is still to open Google Maps, paste the generated script into the browser console and capture
+the numbers visible on the displayed area.
 
-O nmGET gera um **script JavaScript** que coleta números de telefone de uma página web e os envia a um
-servidor, onde ficam organizados por **etiquetas (tags)**. **Futuras atualizações pretendem generalizar**
-a ferramenta para outras páginas de raspagem de números, além do Google Maps.
+nmGET generates a **JavaScript script** that collects phone numbers from a web page and sends them to
+a server, where they are organized by **tags**. **Future updates intend to generalize** the tool for
+other number-scraping pages, beyond Google Maps.
 
-Com os números capturados você pode:
+With the captured numbers you can:
 
-- acompanhar o volume de capturas em um **dashboard** com gráficos;
-- gerenciar uma **fila de captura** por etiqueta;
-- gerar **listas de contatos clicáveis** no formato `wa.me` (WhatsApp), com visual claro ou escuro;
-- **exportar e importar** o banco de dados.
+- track the capture volume on a **dashboard** with charts;
+- manage a **capture queue** per tag;
+- generate **clickable contact lists** in the `wa.me` format (WhatsApp), with light or dark theme;
+- **export and import** the database.
 
-### Por que foi desenvolvido?
+### Why was it developed?
 
-Este projeto foi desenvolvido com **fins de estudo** de desenvolvimento web: Flask, SQLite,
-JavaScript vanilla, integração entre cliente e servidor (via API JSON), gráficos com Chart.js e
-navegação por htmx. Ele é **totalmente funcional e utilizável**, mas foi criado em um contexto
-educacional.
+This project was developed for **study purposes** of web development: Flask, SQLite, vanilla
+JavaScript, client-server integration (via JSON API), charts with Chart.js and navigation with htmx.
+It is **fully functional and usable**, but it was created in an educational context.
 
-### ⚠️ Aviso de responsabilidade
+### ⚠️ Disclaimer
 
-> Este software é fornecido **apenas para fins de estudo e aprendizagem**. O autor
-> **não se responsabiliza** por qualquer uso indevido, ilegal ou contrário aos termos de
-> serviço de terceiros. Utilize-o somente em páginas que você controla ou para as quais
-> possui autorização.
+> This software is provided **for study and learning purposes only**. The author is **not
+> responsible** for any misuse, illegal activity or anything that violates third-party terms of
+> service. Use it only on pages you control or for which you have permission.
 
 ---
 
-## ✨ Funcionalidades
+## ✨ Features
 
-- **Geração de script de captura** — escolha a etiqueta e o tempo de execução (10s até 1h) e copie um script JS pronto.
-- **Captura via Google Maps** — o script é colado no console do navegador na página do Google Maps e coleta os números visíveis no mapa. Futuras atualizações vão generalizar para outras páginas.
-- **Etiquetas (tags)** — crie, selecione e exclua etiquetas para organizar os contatos.
-- **Dashboard** — total de números, capturados hoje, última captura e gráficos (status, por etiqueta, por dia).
-- **Fila de captura** — números aguardando, com ações de enviar (movem para a base de contatos) e excluir.
-- **Gerador de listas** — gera arquivo HTML com links `wa.me` clicáveis, marca como enviados e mostra quem já foi acessado.
-- **Exportar/Importar** — baixe ou restaure o banco de dados inteiro.
-- **Extras técnicos** — CORS liberado, compressão gzip, SQLite em modo WAL, cache de consultas, tema escuro e efeito Matrix.
+- **Capture script generation** — choose the tag and the running time (10s up to 1h) and copy a ready-to-use JS script.
+- **Google Maps capture** — paste the script into the browser console on the Google Maps page and it collects the numbers visible on the map. Future updates will generalize it to other pages.
+- **Tags** — create, select and delete tags to organize your contacts.
+- **Dashboard** — total numbers, captured today, last capture and charts (status, by tag, per day).
+- **Capture queue** — pending numbers, with actions to send (moves them into the contacts base) and delete.
+- **List generator** — generates an HTML file with clickable `wa.me` links, marks numbers as sent and highlights the ones already accessed.
+- **Export/Import** — download or restore the whole database.
+- **Technical extras** — open CORS, gzip compression, SQLite in WAL mode, query cache, dark theme and Matrix effect.
 
-## 🛠️ Tecnologias
+## 🛠️ Tech stack
 
-| Camada      | Tecnologia                                      |
-|-------------|-------------------------------------------------|
-| Backend     | Python 3.10+ com Flask 3.x                      |
-| Banco       | SQLite (modo WAL, índices otimizados)           |
-| Frontend    | HTML, CSS e JavaScript vanilla                  |
-| Auxiliares  | htmx (navegação), Chart.js (gráficos)           |
+| Layer       | Technology                                    |
+|-------------|-----------------------------------------------|
+| Backend     | Python 3.10+ with Flask 3.x                   |
+| Database    | SQLite (WAL mode, optimized indexes)          |
+| Frontend    | Vanilla HTML, CSS and JavaScript              |
+| Auxiliary   | htmx (navigation), Chart.js (charts)          |
 
 ---
 
-## 🚀 Instalação
+## 🚀 Installation
 
-### Pré-requisitos
+### Prerequisites
 
-- **Python 3.10 ou superior** — verifique com `python3 --version`.
-- **git** — para clonar o repositório (opcional se você baixar o zip).
-- Nenhum banco de dados externo é necessário: o SQLite é criado automaticamente na primeira execução.
+- **Python 3.10 or higher** — check with `python3 --version`.
+- **git** — to clone the repository (optional if you download the zip).
+- No external database is needed: SQLite is created automatically on the first run.
 
-### Passo a passo
+### Step by step
 
-**1. Clone o repositório**
+**1. Clone the repository**
 
 ```bash
 git clone git@github.com:DaFi-1/nmget.git
 cd nmget
 ```
 
-> Se preferir, use HTTPS: `git clone https://github.com/DaFi-1/nmget.git`
+> If you prefer, use HTTPS: `git clone https://github.com/DaFi-1/nmget.git`
 
-**2. Crie um ambiente virtual**
+**2. Create a virtual environment**
 
 ```bash
 python3 -m venv venv
 ```
 
-**3. Ative o ambiente virtual**
+**3. Activate the virtual environment**
 
 Linux/macOS:
 
@@ -118,29 +116,29 @@ Windows (PowerShell):
 venv\Scripts\Activate.ps1
 ```
 
-**4. Instale as dependências**
+**4. Install the dependencies**
 
 ```bash
 pip install -r requirements.txt
 ```
 
-**5. Inicie o servidor**
+**5. Start the server**
 
 ```bash
 python main.py
 ```
 
-Você verá no terminal a URL do servidor de desenvolvimento.
+You will see the development server URL in the terminal.
 
-**6. Acesse a aplicação**
+**6. Open the application**
 
-Abra no navegador: <http://127.0.0.1:5000>
+Open your browser at: <http://127.0.0.1:5000>
 
-O banco de dados (`instance/nmget.db`) é criado automaticamente no primeiro acesso.
+The database (`instance/nmget.db`) is created automatically on the first access.
 
-### Rodando em produção (opcional)
+### Running in production (optional)
 
-Para um servidor de produção com Gunicorn:
+For a production server with Gunicorn:
 
 ```bash
 pip install gunicorn
@@ -149,127 +147,127 @@ gunicorn -w 2 -b 127.0.0.1:5000 main:app
 
 ---
 
-## 📖 Como usar
+## 📖 How to use
 
-A aplicação possui 4 páginas acessíveis pela barra lateral (com o efeito Matrix ao fundo).
+The application has 4 pages accessible from the sidebar (with the Matrix effect in the background).
 
-### 1. Dashboard (início)
+### 1. Dashboard (home)
 
-Mostra o panorama geral das capturas:
+Shows the general capture overview:
 
-- **Cards no topo** — total de números capturados, capturados hoje e data/hora da última captura.
-- **Gráfico "Overall status"** — proporção entre números pendentes (`ON`) e enviados (`OFF`).
-- **Gráfico "Status by tag"** — barras empilhadas com pendentes/enviados por etiqueta.
-- **Gráfico "Numbers by tag"** — volume total de cada etiqueta.
-- **Gráfico "Captures per day"** — linha com o número de capturas por dia.
+- **Cards at the top** — total captured numbers, captured today and the date/time of the last capture.
+- **"Overall status" chart** — ratio between pending (`ON`) and sent (`OFF`) numbers.
+- **"Status by tag" chart** — stacked bars with pending/sent numbers per tag.
+- **"Numbers by tag" chart** — total volume of each tag.
+- **"Captures per day" chart** — line with the number of captures per day.
 
-Os dados são atualizados automaticamente a cada poucos segundos.
+The data is refreshed automatically every few seconds.
 
-### 2. Nmget — captura de números (função principal)
+### 2. Nmget — capturing numbers (main feature)
 
-Esta é a tela central do projeto. O fluxo é:
+This is the central screen of the project. The flow is:
 
-**a) Escolha ou crie a etiqueta**
+**a) Choose or create the tag**
 
-Na seção **Add tag**, digite o nome e clique em **Add**. A nova etiqueta passa a constar na lista.
+In the **Add tag** section, type the name and click **Add**. The new tag will appear in the list.
 
-**b) Configure a captura**
+**b) Configure the capture**
 
-Na seção **Configuration**:
+In the **Configuration** section:
 
-- **Tag** — selecione a etiqueta que receberá os números.
-- **Duration** — por quanto tempo o script deve capturar (10s, 20s, 60s, 5m, 10m, 30m ou 1h).
+- **Tag** — select the tag that will receive the numbers.
+- **Duration** — how long the script should capture (10s, 20s, 60s, 5m, 10m, 30m or 1h).
 
-Clique em **Activate script**. O campo **Generated script** será preenchido com um bloco de
-código JavaScript pronto.
+Click **Activate script**. The **Generated script** field will be filled with a ready-to-use
+JavaScript block.
 
-**c) Copie o script**
+**c) Copy the script**
 
-Clique em **Copy**. O script vai para a área de transferência.
+Click **Copy**. The script goes to your clipboard.
 
-**d) Execute no Google Maps**
+**d) Run it on Google Maps**
 
-Abra a página do **Google Maps** (https://maps.google.com) com os estabelecimentos que deseja
-capturar e cole o script no **Console do navegador** (F12 → Console) e pressione Enter.
-Alternativamente, injete o código na própria página.
+Open **Google Maps** (https://maps.google.com) on the page with the businesses you want to capture
+and paste the script into the **browser console** (F12 → Console) and press Enter.
+Alternatively, you can inject the code into the page itself.
 
-> O script lê os números que estão **visíveis na tela** (na região do mapa exibida). Role o mapa para
-> carregar mais resultados e refaça a varredura dentro do tempo escolhido.
+> The script reads the numbers that are **visible on the screen** (in the displayed map area). Scroll
+> the map to load more results and repeat the scan within the chosen time.
 >
-> Esta é a única página de raspagem implementada até o momento. **Futuras atualizações vão
-> generalizar o nmGET para outras páginas de captura de números.**
+> This is the only scraping page implemented so far. **Future updates will generalize nmGET to other
+> number-capturing pages.**
 
-O script irá:
+The script will:
 
-1. varrer a página por números de telefone (10 a 13 dígitos);
-2. agrupar os números únicos e deduplicá-los;
-3. enviá-los ao servidor na etiqueta escolhida (via `POST /phones`);
-4. repetir a varredura a cada ~2s até o tempo escolhido expirar.
+1. scan the page for phone numbers (10 to 13 digits);
+2. collect the unique numbers and deduplicate them;
+3. send them to the server under the chosen tag (via `POST /phones`);
+4. repeat the scan every ~2s until the chosen time expires.
 
-> O navegador precisa estar com o Google Maps **aberto** durante a captura.
+> The browser must keep Google Maps **open** during the capture.
 
-**e) Acompanhe a fila**
+**e) Follow the queue**
 
-A seção **Capture queue** lista, por etiqueta, quantos números aguardam. Ações disponíveis:
+The **Capture queue** section lists how many numbers are waiting, per tag. Available actions:
 
-- **Send all** — move todos os números da fila para a base de contatos (status `ON`, pendentes).
-- **Delete all** — remove os números da fila.
-- Por etiqueta — botões de envio/exclusão individuais.
+- **Send all** — moves all queued numbers into the contacts base (status `ON`, pending).
+- **Delete all** — removes the queued numbers.
+- Per tag — individual send/delete buttons.
 
-**f) Exclua etiquetas**
+**f) Delete tags**
 
-A seção **Current tag** mostra a etiqueta ativa; **Delete tag** remove a etiqueta atual
-(a etiqueta padrão `EMPTY` não pode ser excluída).
+The **Current tag** section shows the active tag; **Delete tag** removes the current tag
+(the default `EMPTY` tag cannot be deleted).
 
-### 3. Ngenerate — gerar listas de contatos
+### 3. Ngenerate — generating contact lists
 
-Transforma os números capturados em uma lista clicável de WhatsApp.
+Turns the captured numbers into a clickable WhatsApp list.
 
-1. Selecione a **etiqueta** e a **quantidade** de números (máx. 5.000).
-2. Clique em **Generate** — a lista é montada e exibida no **Preview**.
-3. Escolha o tema (claro/escuro) e clique em **Download**.
+1. Select the **tag** and the **quantity** of numbers (max. 5,000).
+2. Click **Generate** — the list is built and shown in the **Preview**.
+3. Choose the theme (light/dark) and click **Download**.
 
-O arquivo baixado é um HTML autossuficiente que:
+The downloaded file is a self-contained HTML that:
 
-- lista cada número como um link `wa.me` (abre conversa no WhatsApp);
-- abre no padrão internacional (+55 Brasil);
-- **marca como acessado** os links clicados (fica riscado, usando o armazenamento local) para você não clicar duas vezes.
+- lists each number as a `wa.me` link (opens a WhatsApp conversation);
+- uses the international format (+55 Brazil);
+- **marks as accessed** the links you clicked (crossed out, using local storage) so you don't click them twice.
 
-> Ao baixar uma lista, os números correspondentes são marcados como **enviados** (`OFF`) no banco.
+> When you download a list, the corresponding numbers are marked as **sent** (`OFF`) in the database.
 
-### 4. Config — exportar e importar dados
+### 4. Config — exporting and importing data
 
-- **Export database** — baixa o arquivo `nmget.db` completo (com checkpoint do WAL para garantir consistência).
-- **Import database** — envia um arquivo `.db` para substituir o atual. O banco é validado antes de
-  aplicar e uma cópia de segurança (`nmget.db.bak`) é mantida.
+- **Export database** — downloads the full `nmget.db` file (with a WAL checkpoint to guarantee consistency).
+- **Import database** — uploads a `.db` file to replace the current one. The database is validated before
+  applying, and a backup (`nmget.db.bak`) is kept.
 
 ---
 
-## 🔌 API (referência)
+## 🔌 API (reference)
 
-| Método | Rota                  | Descrição                                              |
+| Method | Route                 | Description                                            |
 |--------|-----------------------|--------------------------------------------------------|
-| GET    | `/`                   | Redireciona para `/dashboard`                          |
-| GET    | `/dashboard`          | Página do dashboard                                    |
-| GET    | `/dashboard/data`     | JSON com as estatísticas                               |
-| GET    | `/nmget`              | Página de captura (também aceita `POST` p/ criar tag)  |
-| GET    | `/tag/current`        | Etiqueta ativa                                          |
-| DELETE | `/tag/current`        | Exclui a etiqueta ativa                                |
-| GET    | `/tags`               | Lista as etiquetas                                     |
-| POST   | `/tags`               | Cria uma etiqueta                                      |
-| GET    | `/ngenerate`          | Página geradora de listas                              |
-| GET    | `/ngenerate/tags`     | Contagens pendentes por etiqueta                       |
-| POST   | `/ngenerate/generate` | Gera a lista de números                                |
-| POST   | `/ngenerate/download` | Baixa a lista HTML e marca como enviados               |
-| POST   | `/phones`             | Recebe números capturados (CORS liberado)              |
-| GET    | `/queue`              | Fila de captura por etiqueta                           |
-| POST   | `/queue/send`         | Envia a fila para a base de contatos                   |
-| POST   | `/queue/clear`        | Limpa a fila                                           |
-| GET    | `/config`             | Página de configuração                                 |
-| GET    | `/config/export`      | Baixa o banco de dados                                 |
-| POST   | `/config/import`      | Importa um banco de dados                              |
+| GET    | `/`                   | Redirects to `/dashboard`                              |
+| GET    | `/dashboard`          | Dashboard page                                         |
+| GET    | `/dashboard/data`     | JSON with the statistics                               |
+| GET    | `/nmget`              | Capture page (also accepts `POST` to create a tag)     |
+| GET    | `/tag/current`        | Active tag                                             |
+| DELETE | `/tag/current`        | Deletes the active tag                                 |
+| GET    | `/tags`               | Lists the tags                                         |
+| POST   | `/tags`               | Creates a tag                                          |
+| GET    | `/ngenerate`          | List generator page                                    |
+| GET    | `/ngenerate/tags`     | Pending counts per tag                                 |
+| POST   | `/ngenerate/generate` | Generates the number list                              |
+| POST   | `/ngenerate/download` | Downloads the HTML list and marks as sent              |
+| POST   | `/phones`             | Receives captured numbers (CORS enabled)               |
+| GET    | `/queue`              | Capture queue per tag                                  |
+| POST   | `/queue/send`         | Sends the queue into the contacts base                 |
+| POST   | `/queue/clear`        | Clears the queue                                       |
+| GET    | `/config`             | Settings page                                          |
+| GET    | `/config/export`      | Downloads the database                                 |
+| POST   | `/config/import`      | Imports a database                                     |
 
-### Exemplo de envio de números (`/phones`)
+### Sending numbers example (`/phones`)
 
 ```bash
 curl -X POST http://127.0.0.1:5000/phones \
@@ -279,41 +277,41 @@ curl -X POST http://127.0.0.1:5000/phones \
 
 ---
 
-## 📁 Estrutura do projeto
+## 📁 Project structure
 
 ```
 nmget/
 ├── app/
-│   ├── __init__.py        # fábrica da aplicação + middleware gzip
-│   ├── db.py              # camada de banco (SQLite) e modelos
+│   ├── __init__.py        # application factory + gzip middleware
+│   ├── db.py              # database layer (SQLite) and models
 │   └── views/             # blueprints: dashboard, nmget, ngenerate, phones, queue, config
 ├── static/
-│   ├── css/style.css      # estilos da interface
-│   ├── js/                # app.js e scripts por página
-│   └── vendor/            # bibliotecas locais (htmx, chart.js)
+│   ├── css/style.css      # interface styles
+│   ├── js/                # app.js and per-page scripts
+│   └── vendor/            # local libraries (htmx, chart.js)
 ├── templates/
-│   ├── layouts/base.html  # layout base (barra lateral, matrix rain)
+│   ├── layouts/base.html  # base layout (sidebar, matrix rain)
 │   └── pages/             # dashboard, nmget, ngenerate, config
-├── instance/              # banco de dados SQLite (criado em tempo de execução)
-├── main.py                # ponto de entrada
-├── requirements.txt       # dependências
+├── instance/              # SQLite database (created at runtime)
+├── main.py                # entry point
+├── requirements.txt       # dependencies
 └── LICENSE                # GNU GPL v3
 ```
 
 ---
 
-## ⚖️ Licença
+## ⚖️ License
 
-Este projeto é distribuído sob a **GNU General Public License v3.0**. Veja o arquivo
-[LICENSE](LICENSE) para os detalhes completos.
+This project is distributed under the **GNU General Public License v3.0**. See the
+[LICENSE](LICENSE) file for full details.
 
-Resumo: você pode usar, estudar, modificar e redistribuir, desde que mantenha a mesma
-licença e informe as alterações. Não há garantias — o software é fornecido "como está".
+Summary: you may use, study, modify and redistribute it, as long as you keep the same license and
+disclose your changes. There are no warranties — the software is provided "as is".
 
 ---
 
-## ⚠️ Aviso legal
+## ⚠️ Legal notice
 
-**Este projeto foi desenvolvido para fins de estudo.** É um software funcional, porém o autor
-**não se responsabiliza** por uso indevido, captura de dados sem autorização ou qualquer violação
-de termos de serviço ou legislação. Use por sua conta e risco e apenas onde for permitido.
+**This project was developed for study purposes.** It is functional software, but the author is
+**not responsible** for misuse, capturing data without authorization or any violation of terms of
+service or legislation. Use it at your own risk and only where permitted.

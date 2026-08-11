@@ -56,11 +56,11 @@ def ngenerate_download():
     Number.mark_sent(db, numbers)
     cache_bust(*BUST_STATS)
     dark = bool(data.get("dark"))
-    safe = re.sub(r"[^A-Za-z0-9._-]+", "-", tag).strip("-") or "lista"
+    safe = re.sub(r"[^A-Za-z0-9._-]+", "-", tag).strip("-") or "list"
     response = make_response(build_whatsapp_html(tag, numbers, dark=dark))
     response.mimetype = "text/html"
     response.headers["Content-Disposition"] = (
-        f'attachment; filename="lista-{safe}.html"'
+        f'attachment; filename="list-{safe}.html"'
     )
     return response
 
@@ -99,7 +99,7 @@ def build_whatsapp_html(tag, numbers, dark=False):
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <title>Lista de WhatsApp - {esc_html(tag)}</title>
+    <title>WhatsApp List - {esc_html(tag)}</title>
     <style>
         body {{
             font-family: system-ui, sans-serif;
@@ -134,7 +134,7 @@ def build_whatsapp_html(tag, numbers, dark=False):
 </head>
 <body>
 
-    <h2>Lista de números - {esc_html(tag)}</h2>
+    <h2>Numbers list - {esc_html(tag)}</h2>
 
     <ol>
 {items}
