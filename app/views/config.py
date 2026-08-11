@@ -20,6 +20,11 @@ def _cleanup(db_path):
         _remove_quietly(db_path + suffix)
 
 
+def _remove_tmp(tmp):
+    _cleanup(tmp)
+    _remove_quietly(tmp)
+
+
 @config_bp.route("/config")
 def config():
     return render_template("pages/config.html")
@@ -58,10 +63,10 @@ def config_import():
                 ).fetchall()
             }
         if not {"tag", "numbers", "queue"}.issubset(tables):
-            _cleanup(tmp)
+            _remove_tmp(tmp)
             return jsonify({"ok": False, "error": "invalid database"}), 400
     except sqlite3.Error:
-        _cleanup(tmp)
+        _remove_tmp(tmp)
         return jsonify({"ok": False, "error": "invalid file"}), 400
 
     backup = os.path.join(BASE_DIR, "instance", "nmget.db.bak")
@@ -69,7 +74,7 @@ def config_import():
         os.replace(DB_PATH, backup)
         _cleanup(backup)
     os.replace(tmp, DB_PATH)
-    _cleanup(tmp)
+    _remove_tmp(tmp)
     db._initialize()
     cache_bust(*BUST_ALL)
     return jsonify({"ok": True})
