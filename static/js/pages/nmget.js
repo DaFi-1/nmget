@@ -38,8 +38,7 @@ App.register("nmget", {
     };
 
     const loadTags = () => {
-      fetch("/tags")
-        .then((r) => r.json())
+      App.api("/tags")
         .then((d) => {
           const current = tag.value;
           tag.innerHTML = '<option value="" selected>Select the tag</option>';
@@ -59,24 +58,21 @@ App.register("nmget", {
       e.preventDefault();
       const name = newTag.value.trim();
       if (!name) return;
-      fetch("/tags", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name })
-      }).then((r) => r.json()).then((d) => {
-        if (d.ok) {
-          newTag.value = "";
-          addTagMsg.textContent = `Tag "${d.name}" added.`;
-          addTagMsg.style.color = "var(--green)";
-          tag.value = d.name;
-          loadTags();
-        } else {
-          addTagMsg.textContent = d.error === "duplicate"
-            ? "Tag already exists."
-            : (d.error || "Error.");
-          addTagMsg.style.color = "#ef4444";
-        }
-      }).catch(() => {});
+      App.api("/tags", { method: "POST", body: { name } })
+        .then((d) => {
+          if (d.ok) {
+            newTag.value = "";
+            addTagMsg.textContent = `Tag "${d.name}" added.`;
+            addTagMsg.style.color = "var(--green)";
+            tag.value = d.name;
+            loadTags();
+          } else {
+            addTagMsg.textContent = d.error === "duplicate"
+              ? "Tag already exists."
+              : (d.error || "Error.");
+            addTagMsg.style.color = "#ef4444";
+          }
+        }).catch(() => {});
     });
 
     const escapeHtml = (v) => String(v)
@@ -123,8 +119,7 @@ App.register("nmget", {
     };
 
     const loadStats = () => {
-      fetch("/queue")
-        .then((r) => r.json())
+      App.api("/queue")
         .then((d) => {
           const current = JSON.stringify(d.items);
           if (current === prevStats) return;
@@ -144,37 +139,34 @@ App.register("nmget", {
         isAdd
           ? `Move all "${tagName}" numbers to the list?`
           : `Delete all "${tagName}" numbers from the queue?`,
-        () => fetch(route, {
+        () => App.api(route, {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ tag: tagName })
+          body: { tag: tagName }
         }).then(loadStats)
       );
     });
 
     btnSendAll.addEventListener("click", () => {
       askConfirm("Send all numbers in the queue to the list?", () => {
-        fetch("/queue/send", { method: "POST" }).then(loadStats);
+        App.api("/queue/send", { method: "POST" }).then(loadStats);
       });
     });
 
     btnDeleteAll.addEventListener("click", () => {
       askConfirm("Delete all numbers from the queue?", () => {
-        fetch("/queue/clear", { method: "POST" }).then(loadStats);
+        App.api("/queue/clear", { method: "POST" }).then(loadStats);
       });
     });
 
     const loadCurrentTag = () => {
-      fetch("/tag/current")
-        .then((r) => r.json())
+      App.api("/tag/current")
         .then((d) => { currentTagName.textContent = d.tag; })
         .catch(() => {});
     };
 
     btnDeleteTag.addEventListener("click", () => {
       askConfirm("Delete the current tag?", () => {
-        fetch("/tag/current", { method: "DELETE" })
-          .then((r) => r.json())
+        App.api("/tag/current", { method: "DELETE" })
           .then((d) => { currentTagName.textContent = d.tag; })
           .catch(() => {});
       });
@@ -226,10 +218,9 @@ App.register("nmget", {
 
     form.addEventListener("submit", (e) => {
       e.preventDefault();
-      fetch("/nmget", {
+      App.api("/nmget", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ tag: tag.value })
+        body: { tag: tag.value }
       }).then(() => loadCurrentTag()).catch(() => {});
       activated = true;
       generate();

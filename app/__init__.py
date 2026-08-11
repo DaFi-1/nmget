@@ -43,10 +43,8 @@ def create_app():
 
     @app.after_request
     def add_cache_headers(response):
-        if request.path.startswith("/static/"):
-            response.headers["Cache-Control"] = "public, max-age=31536000, immutable"
-        else:
-            response.headers["Cache-Control"] = "no-store"
+        cache = "public, max-age=31536000, immutable" if request.path.startswith("/static/") else "no-store"
+        response.headers["Cache-Control"] = cache
         return response
 
     @app.errorhandler(Exception)

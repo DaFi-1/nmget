@@ -3,6 +3,8 @@ import sqlite3
 from flask import Blueprint, jsonify, render_template, request
 
 from app.db import (
+    BUST_ALL,
+    BUST_STATS,
     MAX_TAG_LENGTH,
     Queue,
     Tag,
@@ -25,7 +27,7 @@ def nmget():
                 Tag.create(db, name=tag_name)
             except sqlite3.IntegrityError:
                 pass
-            cache_bust("queue_stats", "dashboard_stats", "pending_counts", "tags")
+            cache_bust(*BUST_ALL)
         return jsonify({"ok": True})
     return render_template("pages/nmget.html")
 
@@ -41,7 +43,7 @@ def delete_current_tag():
     tag = Tag.current(db)
     if tag.name != "EMPTY":
         Tag.delete(db, tag.name)
-        cache_bust("queue_stats", "dashboard_stats", "pending_counts", "tags")
+        cache_bust(*BUST_ALL)
     return jsonify({"tag": "EMPTY"})
 
 
@@ -60,5 +62,5 @@ def create_tag():
         TagName.create(db, name=name)
     except sqlite3.IntegrityError:
         return jsonify({"ok": False, "error": "duplicate"}), 409
-    cache_bust("tags", "queue_stats", "dashboard_stats", "pending_counts")
+    cache_bust(*BUST_ALL)
     return jsonify({"ok": True, "name": name})

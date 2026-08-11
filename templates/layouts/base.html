@@ -28,10 +28,15 @@
         <p class="brand">nm<span>GET</span></p>
         <nav>
           <ul>
-            <li><a class="icon-dashboard {{ 'active' if request.endpoint == 'dashboard.dashboard' else '' }}" data-nav="dashboard" href="{{url_for('dashboard.dashboard')}}" hx-get="{{url_for('dashboard.dashboard')}}" hx-target="#app" hx-select="#app" hx-swap="outerHTML transition:true" hx-push-url="true">Dashboard</a></li>
-            <li><a class="icon-nmget {{ 'active' if request.endpoint == 'nmget.nmget' else '' }}" data-nav="nmget" href="{{url_for('nmget.nmget')}}" hx-get="{{url_for('nmget.nmget')}}" hx-target="#app" hx-select="#app" hx-swap="outerHTML transition:true" hx-push-url="true">Nmget</a></li>
-            <li><a class="icon-ngenerate {{ 'active' if request.endpoint == 'ngenerate.ngenerate' else '' }}" data-nav="ngenerate" href="{{url_for('ngenerate.ngenerate')}}" hx-get="{{url_for('ngenerate.ngenerate')}}" hx-target="#app" hx-select="#app" hx-swap="outerHTML transition:true" hx-push-url="true">Ngenerate</a></li>
-            <li><a class="icon-config {{ 'active' if request.endpoint == 'config.config' else '' }}" data-nav="config" href="{{url_for('config.config')}}" hx-get="{{url_for('config.config')}}" hx-target="#app" hx-select="#app" hx-swap="outerHTML transition:true" hx-push-url="true">Config</a></li>
+            {% set nav_items = [
+              ('dashboard', 'dashboard.dashboard', 'Dashboard'),
+              ('nmget', 'nmget.nmget', 'Nmget'),
+              ('ngenerate', 'ngenerate.ngenerate', 'Ngenerate'),
+              ('config', 'config.config', 'Config')
+            ] %}
+            {% for nav, endpoint, label in nav_items %}
+            <li><a class="icon-{{ nav }} {{ 'active' if request.endpoint == endpoint else '' }}" data-nav="{{ nav }}" href="{{ url_for(endpoint) }}" hx-get="{{ url_for(endpoint) }}" hx-target="#app" hx-select="#app" hx-swap="outerHTML transition:true" hx-push-url="true">{{ label }}</a></li>
+            {% endfor %}
           </ul>
         </nav>
         <p class="brand-foot">v1.0.0</p>

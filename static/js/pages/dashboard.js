@@ -83,8 +83,7 @@ App.register("dashboard", {
       };
 
       const load = () => {
-        fetch("/dashboard/data")
-          .then((r) => r.json())
+        App.api("/dashboard/data")
           .then((d) => {
             const key = JSON.stringify(d);
             if (key === lastKey) return;

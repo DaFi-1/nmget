@@ -3,7 +3,7 @@ import sqlite3
 
 from flask import Blueprint, jsonify, render_template, request, send_file
 
-from app.db import DB_PATH, BASE_DIR, cache_bust, db
+from app.db import BUST_ALL, DB_PATH, BASE_DIR, cache_bust, db
 
 config_bp = Blueprint("config", __name__)
 
@@ -56,5 +56,5 @@ def config_import():
         os.replace(DB_PATH, backup)
     os.replace(tmp, DB_PATH)
     db._initialize()
-    cache_bust("queue_stats", "dashboard_stats", "pending_counts", "tags")
+    cache_bust(*BUST_ALL)
     return jsonify({"ok": True})

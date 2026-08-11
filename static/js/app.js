@@ -42,6 +42,14 @@
     return App.loadScript(`/static/js/pages/${name}.js${ver(`js/pages/${name}.js`)}`);
   };
 
+  App.api = (url, opts = {}) => {
+    if (opts.body !== undefined) {
+      opts.headers = Object.assign({ "Content-Type": "application/json" }, opts.headers);
+      if (typeof opts.body !== "string") opts.body = JSON.stringify(opts.body);
+    }
+    return fetch(url, opts).then((r) => r.json());
+  };
+
   App.register = (name, mod) => {
     App._modules.set(name, mod);
     if (App._pending && App._pending.name === name) {

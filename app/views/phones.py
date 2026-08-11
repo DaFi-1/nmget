@@ -3,6 +3,7 @@ import sqlite3
 from flask import Blueprint, jsonify, request
 
 from app.db import (
+    BUST_STATS,
     MAX_DIGITS,
     MIN_DIGITS,
     Queue,
@@ -44,5 +45,5 @@ def receive_phones():
             numbers.add(number)
 
     Queue.add_numbers(db, tag_name, numbers)
-    cache_bust("queue_stats", "dashboard_stats", "pending_counts")
+    cache_bust(*BUST_STATS)
     return jsonify({"ok": True})

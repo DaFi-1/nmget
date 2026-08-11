@@ -3,7 +3,7 @@ import re
 
 from flask import Blueprint, jsonify, make_response, render_template, request
 
-from app.db import Number, cache_bust, cache_get, db, json_data
+from app.db import BUST_STATS, Number, cache_bust, cache_get, db, json_data
 
 ngenerate_bp = Blueprint("ngenerate", __name__)
 
@@ -54,7 +54,7 @@ def ngenerate_download():
         if re.fullmatch(r"\d+", str(n))
     ]
     Number.mark_sent(db, numbers)
-    cache_bust("dashboard_stats", "pending_counts")
+    cache_bust(*BUST_STATS)
     dark = bool(data.get("dark"))
     safe = re.sub(r"[^A-Za-z0-9._-]+", "-", tag).strip("-") or "lista"
     response = make_response(build_whatsapp_html(tag, numbers, dark=dark))

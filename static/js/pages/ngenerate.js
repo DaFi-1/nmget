@@ -21,8 +21,7 @@ App.register("ngenerate", {
     let downloading = false;
 
     const loadTags = () => {
-      fetch("/ngenerate/tags")
-        .then((r) => r.json())
+      App.api("/ngenerate/tags")
         .then((d) => {
           const current = select.value;
           select.innerHTML = '<option value="" selected>Select the tag</option>';
@@ -49,11 +48,10 @@ App.register("ngenerate", {
       btnGenerate.disabled = true;
       info.textContent = "Generating...";
       info.style.color = "var(--text-dim)";
-      fetch("/ngenerate/generate", {
+      App.api("/ngenerate/generate", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ tag, quantity: qty, dark: theme.value === "black" })
-      }).then((r) => r.json()).then((d) => {
+        body: { tag, quantity: qty, dark: theme.value === "black" }
+      }).then((d) => {
         btnGenerate.disabled = false;
         if (!d.ok) {
           info.textContent = d.error || "Error.";

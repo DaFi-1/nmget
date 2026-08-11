@@ -18,6 +18,9 @@ MIN_DIGITS = 10
 MAX_DIGITS = 13
 MAX_TAG_LENGTH = 50
 
+BUST_STATS = ("queue_stats", "dashboard_stats", "pending_counts")
+BUST_ALL = BUST_STATS + ("tags",)
+
 _CACHE = {}
 
 

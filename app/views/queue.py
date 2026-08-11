@@ -1,6 +1,6 @@
 from flask import Blueprint, jsonify
 
-from app.db import Queue, cache_bust, cache_get, db, json_data
+from app.db import BUST_STATS, Queue, cache_bust, cache_get, db, json_data
 
 queue_bp = Blueprint("queue", __name__)
 
@@ -18,7 +18,7 @@ def queue_send():
         Queue.move_tag(db, tag)
     else:
         Queue.move_to_numbers(db)
-    cache_bust("queue_stats", "dashboard_stats", "pending_counts")
+    cache_bust(*BUST_STATS)
     return jsonify({"ok": True})
 
 
@@ -29,5 +29,5 @@ def queue_clear():
         Queue.clear_tag(db, tag)
     else:
         Queue.clear_all(db)
-    cache_bust("queue_stats", "dashboard_stats", "pending_counts")
+    cache_bust(*BUST_STATS)
     return jsonify({"ok": True})
