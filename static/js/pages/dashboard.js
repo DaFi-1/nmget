@@ -37,7 +37,7 @@ App.register("dashboard", {
         options: {
           plugins: { legend: { position: "top" } },
           scales: {
-            y: { beginAtZero: true, stacked: true, grid: { color: "#1f3b1f" }, ticks: { precision: 0 } },
+            y: { beginAtZero: true, stacked: true, grid: { color: "#032e11" }, ticks: { precision: 0 } },
             x: { stacked: true, grid: { display: false } }
           }
         }
@@ -49,7 +49,7 @@ App.register("dashboard", {
         options: {
           plugins: { legend: { display: false } },
           scales: {
-            y: { beginAtZero: true, grid: { color: "#1f3b1f" }, ticks: { precision: 0 } },
+            y: { beginAtZero: true, grid: { color: "#032e11" }, ticks: { precision: 0 } },
             x: { grid: { display: false } }
           }
         }
@@ -69,7 +69,7 @@ App.register("dashboard", {
         options: {
           plugins: { legend: { display: false } },
           scales: {
-            y: { beginAtZero: true, grid: { color: "#1f3b1f" }, ticks: { precision: 0 } },
+            y: { beginAtZero: true, grid: { color: "#032e11" }, ticks: { precision: 0 } },
             x: { grid: { display: false } }
           }
         }

@@ -157,21 +157,22 @@
     }
   });
 
-  const canvas = document.getElementById("matrix-rain");
-  if (canvas) {
+  function startMatrixRain(canvas) {
+    if (!canvas) return () => {};
     const reduced =
       window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     const ctx = canvas.getContext("2d");
-    const aside = canvas.parentElement;
+    const parent = canvas.parentElement;
     const chars = "0123456789";
     const fontSize = 14;
     let cols = 0;
     let drops = [];
+    let rafId = 0;
 
     function resize() {
       const dpr = window.devicePixelRatio || 1;
-      const width = aside.clientWidth;
-      const height = aside.clientHeight;
+      const width = parent.clientWidth;
+      const height = parent.clientHeight;
       canvas.width = Math.floor(width * dpr);
       canvas.height = Math.floor(height * dpr);
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
@@ -185,14 +186,14 @@
     function draw() {
       if (document.hidden || reduced) return;
       ctx.fillStyle = "rgba(0, 0, 0, 0.07)";
-      ctx.fillRect(0, 0, aside.clientWidth, aside.clientHeight);
+      ctx.fillRect(0, 0, parent.clientWidth, parent.clientHeight);
       ctx.font = `${fontSize}px TerminessNerdFontMono-Regular, ui-monospace, monospace`;
       for (let i = 0; i < cols; i++) {
         const x = i * fontSize;
         const y = drops[i] * fontSize;
         ctx.fillStyle = Math.random() > 0.975 ? "#9dff9d" : "#00ff00";
         ctx.fillText(chars[Math.floor(Math.random() * chars.length)], x, y);
-        if (y > aside.clientHeight && Math.random() > 0.975) drops[i] = 0;
+        if (y > parent.clientHeight && Math.random() > 0.975) drops[i] = 0;
         drops[i]++;
       }
     }
@@ -201,10 +202,18 @@
     window.addEventListener("resize", resize);
     const loop = () => {
       draw();
-      requestAnimationFrame(loop);
+      rafId = requestAnimationFrame(loop);
     };
-    if (!reduced) requestAnimationFrame(loop);
+    if (!reduced) rafId = requestAnimationFrame(loop);
+
+    return () => {
+      cancelAnimationFrame(rafId);
+      window.removeEventListener("resize", resize);
+    };
   }
+
+  startMatrixRain(document.getElementById("matrix-rain"));
+  startMatrixRain(document.getElementById("topbar-matrix-rain"));
 
   if (document.readyState === "loading") {
     document.addEventListener("DOMContentLoaded", mountFromDom);

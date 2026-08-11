@@ -34,12 +34,12 @@
             <li><a class="icon-config {{ 'active' if request.endpoint == 'config.config' else '' }}" data-nav="config" href="{{url_for('config.config')}}" hx-get="{{url_for('config.config')}}" hx-target="#app" hx-select="#app" hx-swap="outerHTML transition:true" hx-push-url="true">Config</a></li>
           </ul>
         </nav>
-        <p class="brand-foot">local capture</p>
+        <p class="brand-foot">v1.0.0</p>
       </aside>
 
       <div id="shell">
         <header id="topbar">
-          <span id="page-title" class="topbar-title">Dashboard</span>
+          <canvas id="topbar-matrix-rain" aria-hidden="true"></canvas>
           <span id="conn-dot" class="conn-dot" title="Status"></span>
         </header>
         <div id="progress" class="progress" aria-hidden="true"></div>

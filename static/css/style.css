@@ -17,8 +17,6 @@
   --background: #000000;
   --card-bg: #0a0f0a;
   --input-bg: #060b06;
-  --border: #1f3b1f;
-  --border-light: #2e5a2e;
   --text: #e5e5e5;
   --text-soft: #5f9a5f;
   --text-dim: #3a5c3a;
@@ -58,12 +56,12 @@ button {background: none;border: none;cursor: pointer;}
 #container aside {
   width:200px;
   height:100%;
-  background-color:var(--background);
+  background-color:#000000;
   display:flex;
   flex-direction:column;
   padding:16px 12px;
   gap:24px;
-  border-right:1px solid var(--border);
+  border-right:1px solid #032e11 !important;
   flex-shrink:0;
   position:relative;
   overflow:hidden;
@@ -183,7 +181,7 @@ button {background: none;border: none;cursor: pointer;}
   align-items:center;
   justify-content:space-between;
   padding:0 20px;
-  border-bottom:1px solid var(--border);
+  border-bottom:1px solid #032e11 !important;
   background-color:var(--background);
 }
 
@@ -261,7 +259,7 @@ button {background: none;border: none;cursor: pointer;}
   flex-direction:column;
   min-height:0;
   background:var(--card-bg);
-  border:1px solid var(--border);
+  border:1px solid #032e11 !important;
   border-radius:12px;
   padding:16px 18px;
 }
@@ -317,7 +315,7 @@ button {background: none;border: none;cursor: pointer;}
 
 #ngenerate .component {
   background:var(--card-bg);
-  border:1px solid #00ff00;
+  border:1px solid #032e11 !important;
   border-radius:12px;
   padding:16px 18px;
 }
@@ -333,9 +331,9 @@ button {background: none;border: none;cursor: pointer;}
   flex:1;
   width:100%;
   min-height:0;
-  border:1px solid var(--border);
+  border:1px solid #032e11 !important;
   border-radius:10px;
-  background:#fff;
+  background:#030303;
   color:#000;
 }
 
@@ -356,7 +354,7 @@ button {background: none;border: none;cursor: pointer;}
 #ngenerate .field select,
 #ngenerate .field input {
   background:var(--input-bg);
-  border:1px solid #00ff00;
+  border:1px solid #032e11 !important;
   border-radius:10px;
   color:var(--text);
   padding:10px 12px;
@@ -367,7 +365,7 @@ button {background: none;border: none;cursor: pointer;}
 
 #ngenerate .field select:focus,
 #ngenerate .field input:focus {
-  border-color:var(--green);
+  border-color:#032e11 !important;
   background:var(--input-bg);
 }
 
@@ -415,7 +413,7 @@ button {background: none;border: none;cursor: pointer;}
 
 .modal-box {
   background:var(--card-bg);
-  border:1px solid #00ff00;
+  border:1px solid #032e11 !important;
   border-radius:12px;
   padding:20px;
   min-width:320px;
@@ -476,7 +474,7 @@ button {background: none;border: none;cursor: pointer;}
 
 #settings .component {
   background:var(--card-bg);
-  border:1px solid #00ff00;
+  border:1px solid #032e11 !important;
   border-radius:12px;
   padding:16px 18px;
 }
@@ -497,7 +495,7 @@ button {background: none;border: none;cursor: pointer;}
 
 #settings .field input {
   background:var(--input-bg);
-  border:1px solid #00ff00;
+  border:1px solid #032e11 !important;
   border-radius:10px;
   color:var(--text);
   padding:10px 12px;
@@ -512,7 +510,7 @@ button {background: none;border: none;cursor: pointer;}
   justify-content:center;
   gap:8px;
   padding:28px 16px;
-  border:2px dashed var(--border-light);
+  border:2px solid #032e11 !important;
   border-radius:12px;
   cursor:pointer;
   text-align:center;
@@ -523,7 +521,7 @@ button {background: none;border: none;cursor: pointer;}
 
 #settings .drop-zone:hover,
 #settings .drop-zone.dragover {
-  border-color:var(--green);
+  border-color:#032e11 !important;
   background:rgba(0, 255, 0, 0.06);
 }
 
@@ -630,7 +628,6 @@ button {background: none;border: none;cursor: pointer;}
   flex-direction:column;
   padding:20px;
   overflow:hidden;
-  border: 1px solid red;
 }
 
 #nmget .grid {
@@ -656,7 +653,7 @@ button {background: none;border: none;cursor: pointer;}
 
 #nmget .component {
   background:var(--card-bg);
-  border:1px solid #00ff00;
+  border:1px solid #032e11 !important;
   border-radius:12px;
   padding:16px 18px;
 }
@@ -691,7 +688,7 @@ button {background: none;border: none;cursor: pointer;}
 #nmget .field select,
 #nmget .field input {
   background:var(--input-bg);
-  border:1px solid #00ff00;
+  border:1px solid #032e11 !important;
   border-radius:10px;
   color:var(--text);
   padding:10px 12px;
@@ -702,7 +699,7 @@ button {background: none;border: none;cursor: pointer;}
 
 #nmget .field select:focus,
 #nmget .field input:focus {
-  border-color:var(--green);
+  border-color:#032e11 !important;
   background:var(--input-bg);
 }
 
@@ -761,7 +758,7 @@ button {background: none;border: none;cursor: pointer;}
   min-height:0;
   resize:vertical;
   background:var(--input-bg);
-  border:1px solid #00ff00;
+  border:1px solid #032e11 !important;
   border-radius:10px;
   color:var(--green);
   font-family:"TerminessNerdFontMono-Regular", ui-monospace, monospace;
@@ -845,7 +842,7 @@ button {background: none;border: none;cursor: pointer;}
   text-align:left;
   padding:10px 12px;
   font-size:13px;
-  border-bottom:1px solid var(--border);
+  border-bottom:1px solid #032e11 !important;
 }
 
 #nmget thead th {
@@ -889,7 +886,7 @@ button {background: none;border: none;cursor: pointer;}
   gap:10px;
   margin-top:16px;
   padding-top:16px;
-  border-top:1px solid var(--border);
+  border-top:1px solid #032e11 !important;
 }
 
 #nmget .stats-actions button {
