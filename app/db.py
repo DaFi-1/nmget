@@ -57,8 +57,12 @@ class Database:
         self._initialize()
 
     def _connect(self):
-        connection = sqlite3.connect(self.path)
+        connection = sqlite3.connect(self.path, timeout=5)
         connection.row_factory = sqlite3.Row
+        connection.execute("PRAGMA journal_mode=WAL")
+        connection.execute("PRAGMA synchronous=NORMAL")
+        connection.execute("PRAGMA busy_timeout=5000")
+        connection.execute("PRAGMA cache_size=-8000")
         return connection
 
     def _initialize(self):
@@ -105,6 +109,8 @@ class Database:
                     ON numbers(status, tag);
                 CREATE INDEX IF NOT EXISTS idx_numbers_date
                     ON numbers(date_get_number);
+                CREATE INDEX IF NOT EXISTS idx_numbers_tag_status_date
+                    ON numbers(tag, status, date_get_number);
                 CREATE INDEX IF NOT EXISTS idx_queue_tag
                     ON queue(tag);
                 """
@@ -183,6 +189,14 @@ class Tag(Model):
         with db._connect() as connection:
             connection.execute(f"DELETE FROM {cls.table} WHERE name = ?", (name,))
 
+    @classmethod
+    def exists(cls, db, name):
+        with db._connect() as connection:
+            row = connection.execute(
+                f"SELECT 1 FROM {cls.table} WHERE name = ? LIMIT 1", (name,)
+            ).fetchone()
+        return row is not None
+
 
 class TagName(Model):
     table = "tegname"
@@ -203,18 +217,8 @@ class Number(Model):
 
     @classmethod
     def stats(cls, db):
-        today_start = datetime.now().strftime("%Y-%m-%d") + " 00:00:00"
+        today_str = datetime.now().strftime("%Y-%m-%d")
         with db._connect() as connection:
-            total = connection.execute("SELECT COUNT(id) FROM numbers").fetchone()[0]
-            by_tag = connection.execute(
-                "SELECT tag, COUNT(id) AS quantity FROM numbers "
-                "GROUP BY tag ORDER BY quantity DESC"
-            ).fetchall()
-            by_date = connection.execute(
-                "SELECT substr(date_get_number, 1, 10) AS date, "
-                "COUNT(id) AS quantity FROM numbers "
-                "GROUP BY date ORDER BY date"
-            ).fetchall()
             by_status = connection.execute(
                 "SELECT status, COUNT(id) AS quantity FROM numbers "
                 "GROUP BY status ORDER BY quantity DESC"
@@ -223,18 +227,31 @@ class Number(Model):
                 "SELECT tag, status, COUNT(id) AS quantity FROM numbers "
                 "GROUP BY tag, status ORDER BY tag"
             ).fetchall()
-            today = connection.execute(
-                "SELECT COUNT(id) FROM numbers WHERE date_get_number >= ?",
-                (today_start,),
-            ).fetchone()[0]
+            by_date = connection.execute(
+                "SELECT substr(date_get_number, 1, 10) AS date, "
+                "COUNT(id) AS quantity FROM numbers "
+                "GROUP BY date ORDER BY date"
+            ).fetchall()
             last = connection.execute(
                 "SELECT MAX(date_get_number) FROM numbers"
             ).fetchone()[0]
+        tag_totals = {}
+        for row in status_by_tag:
+            tag_totals[row["tag"]] = tag_totals.get(row["tag"], 0) + row["quantity"]
+        by_tag = [
+            {"tag": tag, "quantity": quantity}
+            for tag, quantity in sorted(
+                tag_totals.items(), key=lambda item: item[1], reverse=True
+            )
+        ]
+        today = sum(
+            row["quantity"] for row in by_date if row["date"] == today_str
+        )
         return {
-            "total": total,
+            "total": sum(row["quantity"] for row in by_status),
             "today": today,
             "last_capture": last,
-            "by_tag": [dict(row) for row in by_tag],
+            "by_tag": by_tag,
             "by_date": [dict(row) for row in by_date],
             "by_status": [dict(row) for row in by_status],
             "status_by_tag": [dict(row) for row in status_by_tag],
@@ -302,14 +319,11 @@ class Queue(Model):
         where = f" WHERE {filter_}" if filter_ else ""
         moment = now()
         with db._connect() as connection:
-            rows = connection.execute(
-                f"SELECT number, tag FROM queue{where}", values
-            ).fetchall()
-            connection.executemany(
+            connection.execute(
                 "INSERT OR IGNORE INTO numbers "
                 "(tag, number, status, send_date, date_get_number) "
-                "VALUES (?, ?, ?, NULL, ?)",
-                [(row["tag"], row["number"], STATUS_PENDING, moment) for row in rows],
+                f"SELECT tag, number, ?, NULL, ? FROM queue{where}",
+                [STATUS_PENDING, moment] + list(values),
             )
             connection.execute(f"DELETE FROM queue{where}", values)
 
