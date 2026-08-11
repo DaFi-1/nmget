@@ -165,17 +165,19 @@
     }
   });
 
+  const rains = [];
+  let rainRaf = 0;
+  const rainReduced =
+    window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
   function startMatrixRain(canvas) {
-    if (!canvas) return () => {};
-    const reduced =
-      window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (!canvas) return;
     const ctx = canvas.getContext("2d");
     const parent = canvas.parentElement;
     const chars = "0123456789";
     const fontSize = 14;
     let cols = 0;
     let drops = [];
-    let rafId = 0;
 
     function resize() {
       const dpr = window.devicePixelRatio || 1;
@@ -192,7 +194,7 @@
     }
 
     function draw() {
-      if (document.hidden || reduced) return;
+      if (document.hidden || rainReduced) return;
       ctx.fillStyle = "rgba(0, 0, 0, 0.07)";
       ctx.fillRect(0, 0, parent.clientWidth, parent.clientHeight);
       ctx.font = `${fontSize}px TerminessNerdFontMono-Regular, ui-monospace, monospace`;
@@ -208,20 +210,19 @@
 
     resize();
     window.addEventListener("resize", resize);
-    const loop = () => {
-      draw();
-      rafId = requestAnimationFrame(loop);
-    };
-    if (!reduced) rafId = requestAnimationFrame(loop);
+    rains.push({ draw });
+  }
 
-    return () => {
-      cancelAnimationFrame(rafId);
-      window.removeEventListener("resize", resize);
-    };
+  function rainLoop() {
+    if (!document.hidden && !rainReduced) {
+      for (const rain of rains) rain.draw();
+    }
+    rainRaf = requestAnimationFrame(rainLoop);
   }
 
   startMatrixRain(document.getElementById("matrix-rain"));
   startMatrixRain(document.getElementById("topbar-matrix-rain"));
+  if (!rainReduced) rainRaf = requestAnimationFrame(rainLoop);
 
   if (document.readyState === "loading") {
     document.addEventListener("DOMContentLoaded", mountFromDom);
